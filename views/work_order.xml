@@ -12,6 +12,8 @@
             <field name="qty_total"/>
             <field name="qty_pending"/>
             <field name="due_date"/>
+            <field name="recommended_release_date"/>
+            <field name="should_be_released"/>
             <field name="actual_release_date"/>
             <field name="buffer"/>
           </group>
@@ -24,15 +26,18 @@
     <field name="name">work_order.tree</field>
     <field name="model">otif100.work_order</field>
     <field name="arch" type="xml">
-      <tree string="Work Order tree">
+      <tree string="Work Order tree" decoration-info="buffer_penetration&lt;66" decoration-danger="buffer_penetration&gt;66">
         <field name="wo_id"/>
         <field name="cli_id"/>
         <field name="sku_id"/>
         <field name="qty_total"/>
         <field name="qty_pending"/>
         <field name="due_date"/>
+        <field name="recommended_release_date"/>
+        <field name="should_be_released"/>
         <field name="actual_release_date"/>
         <field name="buffer"/>
+        <field name="buffer_penetration" invisible="1"/>
       </tree>
     </field>
   </record>

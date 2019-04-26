@@ -6,7 +6,7 @@
       <form string="SKUs form">
         <sheet>
           <group>
-            <field name="sku_id"/>
+            <field name="name"/>
             <field name="fam_id"/>
             <!-- <field name="buffer"/> -->
           </group>
@@ -20,7 +20,7 @@
     <field name="model">otif100.sku</field>
     <field name="arch" type="xml">
       <tree string="SKUs tree">
-        <field name="sku_id"/>
+        <field name="name"/>
         <field name="fam_id"/>
         <!-- <field name="buffer"/> -->
       </tree>

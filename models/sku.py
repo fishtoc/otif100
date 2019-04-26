@@ -4,8 +4,8 @@ from odoo import models, fields, api
 class Sku(models.Model):
     _name = 'otif100.sku'
 
-    sku_id = fields.Char(
-        string="SKU",
+    name = fields.Char(
+        string="Product SKU",
         help="Your SKU code"
     )
     fam_id = fields.Many2one(
@@ -18,4 +18,9 @@ class Sku(models.Model):
     buffer = fields.Integer(
         related="fam_id.buffer",
         string="Time buffer",
+    )
+    wo_sku = fields.One2many(
+        comodel_name="otif100.work_order",
+        inverse_name="sku_id",
+        string="Product SKU",
     )
