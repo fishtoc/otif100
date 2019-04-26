@@ -1,0 +1,20 @@
+<odoo>
+  <record model="res.groups" id="group_manager">
+    <field name="name">OTIF100 - Manager</field>
+  </record>
+
+  <!-- <record id="only_admin_can_modify" model="ir.rule">
+      <field name="name">Only Admin can modify Work orders</field>
+      <field name="model_id" ref="model_otif100_work_order"/>
+      <field name="groups" eval="[(4, ref('otif100.group_manager'))]"/>
+      <field name="perm_read" eval="0"/>
+      <field name="perm_write" eval="1"/>
+      <field name="perm_create" eval="0"/>
+      <field name="perm_unlink" eval="1"/>
+      <field name="domain_force">
+          ['|', ('responsible_id','=',False),
+                ('responsible_id','=',user.id)]
+      </field>
+  </record> -->
+
+</odoo>

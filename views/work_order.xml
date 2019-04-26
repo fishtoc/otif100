@@ -1,0 +1,47 @@
+<odoo>
+  <record model="ir.ui.view" id="work_order_form_view">
+    <field name="name">work_order.form</field>
+    <field name="model">otif100.work_order</field>
+    <field name="arch" type="xml">
+      <form string="Work Order form">
+        <sheet>
+          <group>
+            <field name="wo_id"/>
+            <field name="cli_id"/>
+            <field name="sku_id"/>
+            <field name="qty_total"/>
+            <field name="qty_pending"/>
+            <field name="due_date"/>
+            <field name="actual_release_date"/>
+            <field name="buffer"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record model="ir.ui.view" id="work_order_tree_view">
+    <field name="name">work_order.tree</field>
+    <field name="model">otif100.work_order</field>
+    <field name="arch" type="xml">
+      <tree string="Work Order tree">
+        <field name="wo_id"/>
+        <field name="cli_id"/>
+        <field name="sku_id"/>
+        <field name="qty_total"/>
+        <field name="qty_pending"/>
+        <field name="due_date"/>
+        <field name="actual_release_date"/>
+        <field name="buffer"/>
+      </tree>
+    </field>
+  </record>
+
+  <record model="ir.actions.act_window" id="work_order_list_action">
+    <field name="name">Work Orders</field>
+    <field name="res_model">otif100.work_order</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+  <menuitem id="work_order_menu" name="Work Orders" parent="otif100_menu" action="work_order_list_action"/>
+</odoo>

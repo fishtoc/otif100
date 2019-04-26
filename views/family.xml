@@ -1,0 +1,35 @@
+<odoo>
+  <record model="ir.ui.view" id="family_form_view">
+    <field name="name">family.form</field>
+    <field name="model">otif100.family</field>
+    <field name="arch" type="xml">
+      <form string="Families form">
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="buffer"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record model="ir.ui.view" id="family_tree_view">
+    <field name="name">family.tree</field>
+    <field name="model">otif100.family</field>
+    <field name="arch" type="xml">
+      <tree string="Families tree">
+        <field name="name"/>
+        <field name="buffer"/>
+      </tree>
+    </field>
+  </record>
+
+  <record model="ir.actions.act_window" id="family_list_action">
+    <field name="name">Families</field>
+    <field name="res_model">otif100.family</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+  <menuitem id="family_menu" name="Families" parent="otif100_menu" action="family_list_action"/>
+</odoo>

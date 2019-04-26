@@ -1,0 +1,7 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+work_order_manager,work_order manager,model_otif100_work_order,group_manager,1,1,1,1
+work_order_read_all,Work_order all,model_otif100_work_order,,1,1,1,1
+sku_manager,sku manager,model_otif100_sku,group_manager,1,1,1,1
+sku_read_all,sku all,model_otif100_sku,,1,0,0,0
+family_manager,family manager,model_otif100_family,group_manager,1,1,1,1
+family_read_all,family all,model_otif100_family,,1,0,0,0

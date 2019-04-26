@@ -1,0 +1,37 @@
+<odoo>
+  <record model="ir.ui.view" id="sku_form_view">
+    <field name="name">sku.form</field>
+    <field name="model">otif100.sku</field>
+    <field name="arch" type="xml">
+      <form string="SKUs form">
+        <sheet>
+          <group>
+            <field name="sku_id"/>
+            <field name="fam_id"/>
+            <!-- <field name="buffer"/> -->
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record model="ir.ui.view" id="sku_tree_view">
+    <field name="name">sku.tree</field>
+    <field name="model">otif100.sku</field>
+    <field name="arch" type="xml">
+      <tree string="SKUs tree">
+        <field name="sku_id"/>
+        <field name="fam_id"/>
+        <!-- <field name="buffer"/> -->
+      </tree>
+    </field>
+  </record>
+
+  <record model="ir.actions.act_window" id="sku_list_action">
+    <field name="name">Products SKUs</field>
+    <field name="res_model">otif100.sku</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+  <menuitem id="sku_menu" name="Products SKUs" parent="otif100_menu" action="sku_list_action"/>
+</odoo>

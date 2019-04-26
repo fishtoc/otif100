@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <menuitem id="main_otif100_menu" name="OTIF 100"/>
+  <menuitem id="otif100_menu" name="OTIF 100" parent="main_otif100_menu"/>
+  <!-- <menuitem id="configuration_menu" name="Configuration" parent="main_otif100_menu"/> -->
+</odoo>
