@@ -33,5 +33,5 @@
     <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
   </record>
-  <menuitem id="sku_menu" name="Products SKUs" parent="otif100_menu" action="sku_list_action"/>
+  <menuitem id="sku_menu" name="Products SKUs" parent="configuration_menu" action="sku_list_action"/>
 </odoo>

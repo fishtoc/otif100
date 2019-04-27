@@ -6,14 +6,16 @@
       <form string="Work Order form">
         <sheet>
           <group>
+            <field name="action_to_take"/>
+            <field name="buffer_penetration" widget="progressbar"/>
             <field name="wo_id"/>
+            <field name="due_date"/>
+            <field name="buffer_status"/>
             <field name="cli_id"/>
             <field name="sku_id"/>
             <field name="qty_total"/>
-            <field name="qty_pending"/>
-            <field name="due_date"/>
+            <field name="order_progress" widget="progressbar"/>
             <field name="recommended_release_date"/>
-            <field name="should_be_released"/>
             <field name="actual_release_date"/>
             <field name="buffer"/>
           </group>
@@ -26,21 +28,40 @@
     <field name="name">work_order.tree</field>
     <field name="model">otif100.work_order</field>
     <field name="arch" type="xml">
-      <tree string="Work Order tree" decoration-info="buffer_penetration&lt;66" decoration-danger="buffer_penetration&gt;66">
+      <tree string="Work Order tree"
+            decoration-bf="buffer_status == 'black'"
+            decoration-danger="buffer_status == 'red'"
+            decoration-warning="buffer_status == 'yellow'"
+            decoration-success="buffer_status == 'green'"
+            decoration-info="buffer_status == 'cyan'">
+        <field name="need_action"/>
         <field name="wo_id"/>
         <field name="cli_id"/>
         <field name="sku_id"/>
         <field name="qty_total"/>
-        <field name="qty_pending"/>
         <field name="due_date"/>
         <field name="recommended_release_date"/>
-        <field name="should_be_released"/>
         <field name="actual_release_date"/>
-        <field name="buffer"/>
-        <field name="buffer_penetration" invisible="1"/>
+        <field name="buffer_status" invisible="1"/>
       </tree>
     </field>
   </record>
+
+<record model="ir.ui.view" id="work_order_search_view">
+  <field name="name">work_order.search</field>
+  <field name="model">otif100.work_order</field>
+  <field name="arch" type="xml">
+    <search>
+      <field name="wo_id"/>
+      <field name="sku_id"/>
+      <field name="due_date"/>
+      <filter name="action_required" string="Decision required" domain="[('need_action', '=', 'True')]"/>
+      <group string="Group by">
+        <filter name="by_customer" string="Customer" context="{'group_by': 'cli_id'}"/>
+      </group>
+    </search>
+  </field>
+</record>
 
   <record model="ir.actions.act_window" id="work_order_list_action">
     <field name="name">Work Orders</field>
@@ -48,5 +69,5 @@
     <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
   </record>
-  <menuitem id="work_order_menu" name="Work Orders" parent="otif100_menu" action="work_order_list_action"/>
+  <menuitem id="work_order_menu" name="Work Orders" parent="production_menu" action="work_order_list_action"/>
 </odoo>
