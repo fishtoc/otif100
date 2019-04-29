@@ -18,19 +18,23 @@ class Work_order(models.Model):
         required=True,
         ondelete="cascade",
         help="Your product code",
-
     )
     qty_total = fields.Float(
         string="Total qty",
         default=0.0,
     )
-    qty_pending = fields.Float(
+    qty_pending = fields.Float(  # Queda aquí por si lo uso después pero desaparece de vistas y cálculos
         string="Pending qty",
         default=0.0,
     )
+    work_center = fields.Char(
+        string="Work center",
+        default="",
+        help="Usually the work center where most of the order is now",
+    )
     due_date = fields.Date(
         string="Due Date",
-        default=None,
+        default=fields.Date.today() + timedelta(days=30),
     )
     actual_release_date = fields.Date(
         string="Actual Release Date",
@@ -40,10 +44,10 @@ class Work_order(models.Model):
         string="Time buffer",
         related="sku_id.buffer",
     )
-    order_progress = fields.Float(
-        compute="_get_order_progress",
-        string="Order progress",
-    )
+    # order_progress = fields.Float(
+    #     compute="_get_order_progress",
+    #     string="Order progress",
+    # )
     recommended_release_date = fields.Date(
         compute="_get_recommended_release_date",
         string="Recommended Release Date",
@@ -56,6 +60,7 @@ class Work_order(models.Model):
     )
     buffer_penetration = fields.Float(
         compute="_get_buffer_penetration",
+        default=0,
         store=True,
     )
     buffer_status = fields.Char(
@@ -80,15 +85,15 @@ class Work_order(models.Model):
         store=True,
     )
 
-    @api.depends("qty_total", "qty_pending")
-    def _get_order_progress(self):
-        for r in self:
-            r.order_progress = 100 * (1 - r.qty_pending / r.qty_total)
+    # @api.depends("qty_total", "qty_pending")
+    # def _get_order_progress(self):
+    #     for r in self:
+    #         r.order_progress = 100 * (1 - r.qty_pending / r.qty_total)
 
     @api.depends("due_date", "buffer")
     def _get_recommended_release_date(self):
         for r in self:
-            Buffer = timedelta(r.buffer)
+            Buffer = timedelta(r.buffer or 1)
             r.recommended_release_date = r.due_date - Buffer
 
     @api.depends("recommended_release_date")
@@ -102,9 +107,10 @@ class Work_order(models.Model):
     @api.depends("recommended_release_date", "buffer")
     def _get_buffer_penetration(self):
         for r in self:
-            Buffer_comsumption = (fields.Date.today() -
-                                  r.recommended_release_date).days
-            r.buffer_penetration = 100 * Buffer_comsumption / r.buffer
+            if r.buffer > 0:
+                Buffer_comsumption = (fields.Date.today() -
+                                      r.recommended_release_date).days
+                r.buffer_penetration = 100 * Buffer_comsumption / r.buffer
 
     @api.depends("buffer_penetration")
     def _get_buffer_status(self):
