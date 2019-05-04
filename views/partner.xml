@@ -1,0 +1,8 @@
+<odoo>
+  <record model="ir.actions.act_window" id="partner_list_action">
+    <field name="name">Partners</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+  <menuitem id="partner_menu" name="Partners" parent="base.menu_administration" action="partner_list_action"/>
+</odoo>

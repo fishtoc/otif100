@@ -1,6 +1,6 @@
 {
     'name': 'OTIF 100',
-    'description': 'Sistema para controlar la producción y lograr 100% de entrega a tiempo',
+    'description': 'Production control system to achieve 100% On Time In Full delivery',
     'author': 'Matias Birrell R.',
     'website': 'https://www.ingeser.cl',
     'category': 'PRO',
@@ -11,9 +11,11 @@
     'data': [  # Todos los archivos CSV y XML que va a detectar el sistema
         'security/security.xml',
         'security/ir.model.access.csv',
+        'views/partner.xml',
         'views/otif100.xml',
         'views/work_order.xml',
         'views/family.xml',
         'views/sku.xml',
+        'views/nonworkingdays.xml',
     ]
 }

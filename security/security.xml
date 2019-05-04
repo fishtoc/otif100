@@ -3,18 +3,56 @@
     <field name="name">OTIF100 - Manager</field>
   </record>
 
-  <!-- <record id="only_admin_can_modify" model="ir.rule">
-      <field name="name">Only Admin can modify Work orders</field>
+  <record id="only_company_work_order" model="ir.rule">
+      <field name="name">Same company restriction Work orders</field>
       <field name="model_id" ref="model_otif100_work_order"/>
       <field name="groups" eval="[(4, ref('otif100.group_manager'))]"/>
-      <field name="perm_read" eval="0"/>
+      <field name="perm_read" eval="1"/>
       <field name="perm_write" eval="1"/>
-      <field name="perm_create" eval="0"/>
+      <field name="perm_create" eval="1"/>
       <field name="perm_unlink" eval="1"/>
       <field name="domain_force">
-          ['|', ('responsible_id','=',False),
-                ('responsible_id','=',user.id)]
+        ['|', ('company_id','=',False),('company_id','=',user.partner_id.id)]
       </field>
-  </record> -->
+  </record>
+
+  <record id="only_company_family" model="ir.rule">
+      <field name="name">Same company restriction Families</field>
+      <field name="model_id" ref="model_otif100_family"/>
+      <field name="groups" eval="[(4, ref('otif100.group_manager'))]"/>
+      <field name="perm_read" eval="1"/>
+      <field name="perm_write" eval="1"/>
+      <field name="perm_create" eval="1"/>
+      <field name="perm_unlink" eval="1"/>
+      <field name="domain_force">
+        ['|', ('company_id','=',False),('company_id','=',user.partner_id.id)]
+      </field>
+  </record>
+
+  <record id="only_company_sku" model="ir.rule">
+      <field name="name">Same company restriction SKUs</field>
+      <field name="model_id" ref="model_otif100_sku"/>
+      <field name="groups" eval="[(4, ref('otif100.group_manager'))]"/>
+      <field name="perm_read" eval="1"/>
+      <field name="perm_write" eval="1"/>
+      <field name="perm_create" eval="1"/>
+      <field name="perm_unlink" eval="1"/>
+      <field name="domain_force">
+        ['|', ('company_id','=',False),('company_id','=',user.partner_id.id)]
+      </field>
+  </record>
+
+  <record id="only_company_nwd" model="ir.rule">
+      <field name="name">Same company restriction NWDs</field>
+      <field name="model_id" ref="model_otif100_nwd"/>
+      <field name="groups" eval="[(4, ref('otif100.group_manager'))]"/>
+      <field name="perm_read" eval="1"/>
+      <field name="perm_write" eval="1"/>
+      <field name="perm_create" eval="1"/>
+      <field name="perm_unlink" eval="1"/>
+      <field name="domain_force">
+        ['|', ('company_id','=',False),('company_id','=',user.partner_id.id)]
+      </field>
+  </record>
 
 </odoo>

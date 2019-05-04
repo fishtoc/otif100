@@ -44,10 +44,17 @@ class Work_order(models.Model):
         string="Time buffer",
         related="sku_id.buffer",
     )
-    # order_progress = fields.Float(
-    #     compute="_get_order_progress",
-    #     string="Order progress",
-    # )
+    company_id = fields.Many2one(  # Para filtrar por company
+        comodel_name="res.partner",
+        required=True,
+        store=True,
+        default=lambda self: self.env.user.partner_id,
+    )
+    _sql_constraints = [
+        ("name_unique",
+         "UNIQUE(wo_id)",
+         "Work order identifier must be unique")
+    ]
     recommended_release_date = fields.Date(
         compute="_get_recommended_release_date",
         string="Recommended Release Date",

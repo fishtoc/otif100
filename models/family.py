@@ -18,3 +18,14 @@ class Family(models.Model):
         inverse_name="fam_id",
         string="Products SKUs",
     )
+    company_id = fields.Many2one(  # Para filtrar por company
+        comodel_name="res.partner",
+        required=True,
+        store=True,
+        default=lambda self: self.env.user.partner_id,
+    )
+    _sql_constraints = [
+        ("name_unique",
+         "UNIQUE(name)",
+         "Family name must be unique")
+    ]
