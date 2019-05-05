@@ -6,7 +6,8 @@
       <form string="SKUs form">
         <sheet>
           <group>
-            <field name="name"/>
+            <field name="nwds"/>
+            <field name="day_name"/>
             <field name="description"/>
             <field name="company_id"/>
           </group>
@@ -20,7 +21,8 @@
     <field name="model">otif100.nwd</field>
     <field name="arch" type="xml">
       <tree string="Non Working Days tree">
-        <field name="name"/>
+        <field name="nwds"/>
+        <field name="day_name"/>
         <field name="description"/>
         <field name="company_id"/>
       </tree>

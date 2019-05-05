@@ -1,12 +1,18 @@
 from odoo import models, fields, api
+import calendar
 
 
 class Nonworkingdays(models.Model):
     _name = 'otif100.nwd'
 
-    name = fields.Date(
+    nwds = fields.Date(
         string="Non working day",
-        help="A day to ignore when calculating dates"
+        help="A day to ignore when calculating dates",
+        default=fields.Date.today(),
+    )
+    day_name = fields.Char(
+        string="Day of week",
+        compute="_get_dayofweek",
     )
     description = fields.Char(
         string="Description",
@@ -19,8 +25,10 @@ class Nonworkingdays(models.Model):
         store=True,
         default=lambda self: self.env.user.partner_id,
     )
-    _sql_constraints = [
-        ("name_unique",
-         "UNIQUE(name)",
-         "This date is already marked as non working day")
-    ]
+
+    @api.depends("nwds")
+    def _get_dayofweek(self):
+        days = list(calendar.day_name)
+        for r in self:
+            yy, mm, dd = r.nwds.year, r.nwds.month, r.nwds.day
+            r.day_name = days[calendar.weekday(yy, mm, dd)]
