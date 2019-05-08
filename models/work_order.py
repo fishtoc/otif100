@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, exceptions
 from datetime import timedelta
 
 
@@ -88,23 +88,20 @@ class Work_order(models.Model):
     )
 
     @api.depends("due_date", "buffer")
-    def _get_recommended_release_date(self):  # ******** FIX, por ahora
-        # model = self.pool.get("otif100.nwd")        # días múltiplos de 7
-        # nw_days = model.search([('company_id', '=', 'self.company_id')])
-        nw_days = []
-        cur_date = fields.Date.to_date("2019-01-01")
-        while cur_date < fields.Date.to_date("2020-01-01"):
-            if (cur_date.day % 7) == 0:
-                nw_days.append(cur_date)
-            cur_date = cur_date + timedelta(days=1)
+    def _get_recommended_release_date(self):
+        nw_days = self.env["otif100.nwd"].search_read(
+            [('company_id', '=', self.env.user.parent_id.name)], ['nwds'])
+        nw_dates = [i['nwds'] for i in nw_days]
+        # raise exceptions.ValidationError(
+        #     "{}: {}".format(self.env.user.parent_id.name, nw_dates))
         for r in self:
             buff = r.buffer
             recc_rd = r.due_date
             while buff > 0:
                 recc_rd = recc_rd - timedelta(days=1)
-                if recc_rd not in nw_days:
+                if recc_rd not in nw_dates:
                     buff = buff - 1
-                r.recommended_release_date = recc_rd
+            r.recommended_release_date = recc_rd
 
     @api.depends("recommended_release_date")
     def _should_release(self):
