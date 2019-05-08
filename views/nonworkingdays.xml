@@ -28,11 +28,21 @@
     </field>
   </record>
 
+  <record model="ir.ui.view" id="nwd_calendar_view">
+    <field name="name">nwd.calendar</field>
+    <field name="model">otif100.nwd</field>
+    <field name="arch" type="xml">
+      <calendar string="Non working days calendar" date_start="nwds" date_stop="nwds" color="nwds">
+        <field name="description"/>
+      </calendar>
+    </field>
+  </record>
+
   <record model="ir.actions.act_window" id="nwd_list_action">
     <field name="name">Non Working Days</field>
     <field name="res_model">otif100.nwd</field>
     <field name="view_type">form</field>
-    <field name="view_mode">tree,form</field>
+    <field name="view_mode">calendar,tree,form</field>
   </record>
   <menuitem id="nwd_menu" name="Non Working Days" parent="configuration_menu" action="nwd_list_action"/>
 </odoo>
