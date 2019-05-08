@@ -9,7 +9,6 @@
             <field name="nwds"/>
             <field name="day_name"/>
             <field name="description"/>
-            <field name="company_id"/>
           </group>
         </sheet>
       </form>
@@ -24,7 +23,7 @@
         <field name="nwds"/>
         <field name="day_name"/>
         <field name="description"/>
-        <field name="company_id"/>
+        <field name="company_id" invisible="1"/>
       </tree>
     </field>
   </record>

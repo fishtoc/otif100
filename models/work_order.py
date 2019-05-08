@@ -23,10 +23,6 @@ class Work_order(models.Model):
         string="Total qty",
         default=0.0,
     )
-    qty_pending = fields.Float(  # Queda aquí por si lo uso después pero desaparece de vistas y cálculos
-        string="Pending qty",
-        default=0.0,
-    )
     work_center = fields.Char(
         string="Work center",
         default="",
@@ -44,13 +40,12 @@ class Work_order(models.Model):
         string="Time buffer",
         related="sku_id.buffer",
     )
-    company_id = fields.Many2one(  # Para filtrar por company
-        comodel_name="res.partner",
+    company_id = fields.Char(  # Para filtrar por company
         required=True,
         store=True,
-        default=lambda self: self.env.user.partner_id,
+        default=lambda self: self.env.user.parent_id.name,
     )
-    _sql_constraints = [
+    _sql_constraints = [  # ****** REVISAR SI constrains o esto
         ("name_unique",
          "UNIQUE(wo_id)",
          "Work order identifier must be unique")
@@ -92,16 +87,24 @@ class Work_order(models.Model):
         store=True,
     )
 
-    # @api.depends("qty_total", "qty_pending")
-    # def _get_order_progress(self):
-    #     for r in self:
-    #         r.order_progress = 100 * (1 - r.qty_pending / r.qty_total)
-
     @api.depends("due_date", "buffer")
-    def _get_recommended_release_date(self):
+    def _get_recommended_release_date(self):  # ******** FIX, por ahora
+        # model = self.pool.get("otif100.nwd")        # días múltiplos de 7
+        # nw_days = model.search([('company_id', '=', 'self.company_id')])
+        nw_days = []
+        cur_date = fields.Date.to_date("2019-01-01")
+        while cur_date < fields.Date.to_date("2020-01-01"):
+            if (cur_date.day % 7) == 0:
+                nw_days.append(cur_date)
+            cur_date = cur_date + timedelta(days=1)
         for r in self:
-            Buffer = timedelta(r.buffer or 1)
-            r.recommended_release_date = r.due_date - Buffer
+            buff = r.buffer
+            recc_rd = r.due_date
+            while buff > 0:
+                recc_rd = recc_rd - timedelta(days=1)
+                if recc_rd not in nw_days:
+                    buff = buff - 1
+                r.recommended_release_date = recc_rd
 
     @api.depends("recommended_release_date")
     def _should_release(self):

@@ -6,7 +6,7 @@ class Family(models.Model):
 
     name = fields.Char(
         string="Production family",
-        help="Production family for SKUs"
+        help="Production family for SKUs",
     )
     buffer = fields.Integer(
         string="Buffer",
@@ -18,14 +18,17 @@ class Family(models.Model):
         inverse_name="fam_id",
         string="Products SKUs",
     )
-    company_id = fields.Many2one(  # Para filtrar por company
-        comodel_name="res.partner",
+    company_id = fields.Char(  # Para filtrar por company
         required=True,
         store=True,
-        default=lambda self: self.env.user.partner_id,
+        default=lambda self: self.env.user.parent_id.name,
     )
     _sql_constraints = [
         ("name_unique",
          "UNIQUE(name)",
-         "Family name must be unique")
+         "Family name must be unique"),
     ]
+    espacio_derecha = fields.Char(  # En lista, para que buffer quede mejor
+        string=" ",
+        default="                                        ",
+    )

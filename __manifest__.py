@@ -4,7 +4,7 @@
     'author': 'Matias Birrell R.',
     'website': 'https://www.ingeser.cl',
     'category': 'PRO',
-    'version': '0.0.1',
+    'version': '1.1.0',
     'depends': [
         'base',
     ],

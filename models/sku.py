@@ -24,11 +24,10 @@ class Sku(models.Model):
         inverse_name="sku_id",
         string="Product SKU",
     )
-    company_id = fields.Many2one(  # Para filtrar por company
-        comodel_name="res.partner",
+    company_id = fields.Char(  # Para filtrar por company
         required=True,
         store=True,
-        default=lambda self: self.env.user.partner_id,
+        default=lambda self: self.env.user.parent_id.name,
     )
     _sql_constraints = [
         ("name_unique",

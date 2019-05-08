@@ -8,7 +8,6 @@
           <group>
             <field name="name"/>
             <field name="buffer"/>
-            <field name="company_id"/>
           </group>
         </sheet>
       </form>
@@ -22,7 +21,8 @@
       <tree string="Families tree">
         <field name="name"/>
         <field name="buffer"/>
-        <field name="company_id"/>
+        <field name="company_id" invisible="1"/>
+        <field name="espacio_derecha"/>
       </tree>
     </field>
   </record>

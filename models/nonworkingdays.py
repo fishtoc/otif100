@@ -13,17 +13,17 @@ class Nonworkingdays(models.Model):
     day_name = fields.Char(
         string="Day of week",
         compute="_get_dayofweek",
+        store=True,
     )
     description = fields.Char(
         string="Description",
         default="Weekend",
         help="A brief description of why it is not a working day",
     )
-    company_id = fields.Many2one(  # Para filtrar por company
-        comodel_name="res.partner",
+    company_id = fields.Char(  # Para filtrar por company
         required=True,
         store=True,
-        default=lambda self: self.env.user.partner_id,
+        default=lambda self: self.env.user.parent_id.name,
     )
 
     @api.depends("nwds")

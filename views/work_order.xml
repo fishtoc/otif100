@@ -43,6 +43,7 @@
         <field name="recommended_release_date"/>
         <field name="actual_release_date"/>
         <field name="buffer_status" invisible="1"/>
+        <field name="company_id" invisible="1"/>
       </tree>
     </field>
   </record>
