@@ -7,39 +7,123 @@
     <field name="name">OTIF100 - User</field>
   </record>
 
-  <record id="family_company_filter" model="ir.rule">
+  <record model="res.groups" id="group_superuser">
+    <field name="name">OTIF100 - Super User</field>
+  </record>
+
+  <record id="family_company_filter_usr" model="ir.rule">
     <field name="name">Families only for same company</field>
     <field name="model_id" ref="model_otif100_family"/>
+    <field name="groups" eval="[(4,ref('otif100.group_user'))]"/>
     <field name="domain_force">
       ['|', ('company_id','=',False),
             ('company_id','=',user.parent_id.name)]
     </field>
   </record>
 
-  <record id="sku_company_filter" model="ir.rule">
+  <record id="family_company_filter_mgr" model="ir.rule">
+    <field name="name">Families only for same company</field>
+    <field name="model_id" ref="model_otif100_family"/>
+    <field name="groups" eval="[(4,ref('otif100.group_manager'))]"/>
+    <field name="domain_force">
+      ['|', ('company_id','=',False),
+            ('company_id','=',user.parent_id.name)]
+    </field>
+  </record>
+
+  <record id="family_company_filter_su" model="ir.rule">
+    <field name="name">Families all companies</field>
+    <field name="model_id" ref="model_otif100_family"/>
+    <field name="groups" eval="[(4,ref('otif100.group_superuser'))]"/>
+    <field name="domain_force">
+      [('company_id','!=',False)]
+    </field>
+  </record>
+
+  <record id="sku_company_filter_usr" model="ir.rule">
     <field name="name">SKUs only for same company</field>
     <field name="model_id" ref="model_otif100_sku"/>
+    <field name="groups" eval="[(4,ref('otif100.group_user'))]"/>
     <field name="domain_force">
       ['|', ('company_id','=',False),
             ('company_id','=',user.parent_id.name)]
     </field>
   </record>
 
-  <record id="work_order_company_filter" model="ir.rule">
+  <record id="sku_company_filter_mgr" model="ir.rule">
+    <field name="name">SKUs only for same company</field>
+    <field name="model_id" ref="model_otif100_sku"/>
+    <field name="groups" eval="[(4,ref('otif100.group_manager'))]"/>
+    <field name="domain_force">
+      ['|', ('company_id','=',False),
+            ('company_id','=',user.parent_id.name)]
+    </field>
+  </record>
+
+  <record id="sku_company_filter_su" model="ir.rule">
+    <field name="name">SKUs all companies</field>
+    <field name="model_id" ref="model_otif100_sku"/>
+    <field name="groups" eval="[(4,ref('otif100.group_superuser'))]"/>
+    <field name="domain_force">
+      [('company_id','!=',False)]
+    </field>
+  </record>
+
+  <record id="work_order_company_filter_usr" model="ir.rule">
     <field name="name">Work orders only for same company</field>
     <field name="model_id" ref="model_otif100_work_order"/>
+    <field name="groups" eval="[(4,ref('otif100.group_user'))]"/>
     <field name="domain_force">
       ['|', ('company_id','=',False),
             ('company_id','=',user.parent_id.name)]
     </field>
   </record>
 
-  <record id="nwd_company_filter" model="ir.rule">
-    <field name="name">NWDs only for same company</field>
-    <field name="model_id" ref="model_otif100_nwd"/>
+  <record id="work_order_company_filter_mgr" model="ir.rule">
+    <field name="name">Work orders only for same company</field>
+    <field name="model_id" ref="model_otif100_work_order"/>
+    <field name="groups" eval="[(4,ref('otif100.group_manager'))]"/>
     <field name="domain_force">
       ['|', ('company_id','=',False),
             ('company_id','=',user.parent_id.name)]
+    </field>
+  </record>
+
+  <record id="work_order_company_filter_su" model="ir.rule">
+    <field name="name">Work orders all companies</field>
+    <field name="model_id" ref="model_otif100_work_order"/>
+    <field name="groups" eval="[(4,ref('otif100.group_superuser'))]"/>
+    <field name="domain_force">
+      [('company_id','!=',False)]
+    </field>
+  </record>
+
+  <record id="nwd_company_filter_usr" model="ir.rule">
+    <field name="name">NWDs only for same company</field>
+    <field name="model_id" ref="model_otif100_nwd"/>
+    <field name="groups" eval="[(4,ref('otif100.group_user'))]"/>
+    <field name="domain_force">
+      ['|', ('company_id','=',False),
+            ('company_id','=',user.parent_id.name)]
+    </field>
+  </record>
+
+  <record id="nwd_company_filter_mgr" model="ir.rule">
+    <field name="name">NWDs only for same company</field>
+    <field name="model_id" ref="model_otif100_nwd"/>
+    <field name="groups" eval="[(4,ref('otif100.group_manager'))]"/>
+    <field name="domain_force">
+      ['|', ('company_id','=',False),
+            ('company_id','=',user.parent_id.name)]
+    </field>
+  </record>
+
+  <record id="nwd_company_filter_su" model="ir.rule">
+    <field name="name">NWDs all companies</field>
+    <field name="model_id" ref="model_otif100_nwd"/>
+    <field name="groups" eval="[(4,ref('otif100.group_superuser'))]"/>
+    <field name="domain_force">
+      [('company_id','!=',False)]
     </field>
   </record>
 

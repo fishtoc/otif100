@@ -43,6 +43,7 @@ class Work_order(models.Model):
     company_id = fields.Char(  # Para filtrar por company
         required=True,
         store=True,
+        readonly="1",
         default=lambda self: self.env.user.parent_id.name,
     )
     _sql_constraints = [  # ****** REVISAR SI constrains o esto
@@ -92,8 +93,6 @@ class Work_order(models.Model):
         nw_days = self.env["otif100.nwd"].search_read(
             [('company_id', '=', self.env.user.parent_id.name)], ['nwds'])
         nw_dates = [i['nwds'] for i in nw_days]
-        # raise exceptions.ValidationError(
-        #     "{}: {}".format(self.env.user.parent_id.name, nw_dates))
         for r in self:
             buff = r.buffer
             recc_rd = r.due_date
@@ -113,25 +112,36 @@ class Work_order(models.Model):
 
     @api.depends("recommended_release_date", "buffer")
     def _get_buffer_penetration(self):
+        nw_days = self.env["otif100.nwd"].search_read(
+            [('company_id', '=', self.env.user.parent_id.name)], ['nwds'])
+        nw_dates = [i['nwds'] for i in nw_days]
         for r in self:
+            Buffer_comsumption = 0
             if r.buffer > 0:
-                Buffer_comsumption = (fields.Date.today() -
-                                      r.recommended_release_date).days
-                r.buffer_penetration = 100 * Buffer_comsumption / r.buffer
+                cur_date = r.recommended_release_date
+                if cur_date <= fields.Date.today():
+                    lapso = 1
+                else:
+                    lapso = -1
+                while cur_date != fields.Date.today():
+                    if cur_date not in nw_dates:
+                        Buffer_comsumption = Buffer_comsumption + lapso
+                    cur_date = cur_date + timedelta(days=lapso)
+            r.buffer_penetration = 100 * Buffer_comsumption / r.buffer
 
     @api.depends("buffer_penetration")
     def _get_buffer_status(self):
         for r in self:
             if r.buffer_penetration < 0:
-                r.buffer_status = 'cyan'
+                r.buffer_status = '4. cyan'
             elif r.buffer_penetration < 33.01:
-                r.buffer_status = 'green'
+                r.buffer_status = '3. green'
             elif r.buffer_penetration < 66.01:
-                r.buffer_status = 'yellow'
+                r.buffer_status = '2. yellow'
             elif r.buffer_penetration < 100.01:
-                r.buffer_status = 'red'
+                r.buffer_status = '1. red'
             else:
-                r.buffer_status = 'black'
+                r.buffer_status = '0. black'
 
     @api.depends("actual_release_date")
     def _check_released(self):

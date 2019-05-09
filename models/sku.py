@@ -27,6 +27,7 @@ class Sku(models.Model):
     company_id = fields.Char(  # Para filtrar por company
         required=True,
         store=True,
+        readonly="1",
         default=lambda self: self.env.user.parent_id.name,
     )
     _sql_constraints = [

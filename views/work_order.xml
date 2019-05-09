@@ -28,11 +28,11 @@
     <field name="model">otif100.work_order</field>
     <field name="arch" type="xml">
       <tree string="Work Order tree"
-            decoration-bf="buffer_status == 'black'"
-            decoration-danger="buffer_status == 'red'"
-            decoration-warning="buffer_status == 'yellow'"
-            decoration-success="buffer_status == 'green'"
-            decoration-info="buffer_status == 'cyan'">
+            decoration-bf="buffer_status == '0. black'"
+            decoration-danger="buffer_status == '1. red'"
+            decoration-warning="buffer_status == '2. yellow'"
+            decoration-success="buffer_status == '3. green'"
+            decoration-info="buffer_status == '4. cyan'">
         <field name="need_action"/>
         <field name="wo_id"/>
         <field name="cli_id"/>
@@ -48,28 +48,31 @@
     </field>
   </record>
 
-<record model="ir.ui.view" id="work_order_search_view">
-  <field name="name">work_order.search</field>
-  <field name="model">otif100.work_order</field>
-  <field name="arch" type="xml">
-    <search>
-      <field name="wo_id"/>
-      <field name="sku_id"/>
-      <field name="due_date"/>
-      <filter name="action_required" string="Decision required" domain="[('need_action', '=', 'True')]"/>
-      <group string="Group by">
-        <filter name="by_customer" string="Customer" context="{'group_by': 'cli_id'}"/>
-        <filter name="by_workcenter" string="Work center" context="{'group_by': 'work_center'}"/>
-      </group>
-    </search>
-  </field>
-</record>
+  <record model="ir.ui.view" id="work_order_search_view">
+    <field name="name">work_order.search</field>
+    <field name="model">otif100.work_order</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="wo_id"/>
+        <field name="sku_id"/>
+        <field name="due_date"/>
+        <filter name="action_required" string="Decision required" domain="[('need_action', '=', 'True')]"/>
+        <group string="Group by">
+          <filter name="by_customer" string="Customer" context="{'group_by': 'cli_id'}"/>
+          <filter name="by_workcenter" string="Work center" context="{'group_by': 'work_center'}"/>
+          <filter name="by_color" string="Priority" context="{'group_by': 'buffer_status'}"/>
+        </group>
+      </search>
+    </field>
+  </record>
 
   <record model="ir.actions.act_window" id="work_order_list_action">
     <field name="name">Work Orders</field>
     <field name="res_model">otif100.work_order</field>
+    <field name="limit">1000</field>
     <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
   </record>
+
   <menuitem id="work_order_menu" name="Work Orders" parent="production_menu" action="work_order_list_action"/>
 </odoo>

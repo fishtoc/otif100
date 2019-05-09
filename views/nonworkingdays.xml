@@ -41,8 +41,9 @@
   <record model="ir.actions.act_window" id="nwd_list_action">
     <field name="name">Non Working Days</field>
     <field name="res_model">otif100.nwd</field>
+    <field name="limit">1000</field>
     <field name="view_type">form</field>
-    <field name="view_mode">calendar,tree,form</field>
+    <field name="view_mode">tree,calendar,form</field>
   </record>
   <menuitem id="nwd_menu" name="Non Working Days" parent="configuration_menu" action="nwd_list_action"/>
 </odoo>
