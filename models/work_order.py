@@ -127,7 +127,7 @@ class Work_order(models.Model):
                     if cur_date not in nw_dates:
                         Buffer_comsumption = Buffer_comsumption + lapso
                     cur_date = cur_date + timedelta(days=lapso)
-            r.buffer_penetration = 100 * Buffer_comsumption / r.buffer
+                r.buffer_penetration = 100 * Buffer_comsumption / r.buffer
 
     @api.depends("buffer_penetration")
     def _get_buffer_status(self):
