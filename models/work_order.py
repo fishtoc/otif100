@@ -54,17 +54,17 @@ class Work_order(models.Model):
     recommended_release_date = fields.Date(
         compute="_get_recommended_release_date",
         string="Recommended Release Date",
-        store=True,
+        store=False,
     )
     should_be_released = fields.Boolean(
         compute="_should_release",
         string="Should be released",
-        store=True,
+        store=False,
     )
     buffer_penetration = fields.Float(
         compute="_get_buffer_penetration",
         default=0,
-        store=True,
+        store=False,
     )
     buffer_status = fields.Char(
         string="Buffer color",
@@ -74,7 +74,7 @@ class Work_order(models.Model):
     is_released = fields.Boolean(
         compute="_check_released",
         string="Already released",
-        store=True,
+        store=False,
     )
     action_to_take = fields.Char(
         compute="_get_action",
@@ -86,6 +86,10 @@ class Work_order(models.Model):
         default=False,
         string="NEED ATTENTION",
         store=True,
+    )
+    today = fields.Date(
+        compute="_get_today_date",
+        store=False,
     )
 
     @api.depends("due_date", "buffer")
@@ -102,15 +106,15 @@ class Work_order(models.Model):
                     buff = buff - 1
             r.recommended_release_date = recc_rd
 
-    @api.depends("recommended_release_date")
+    @api.depends("recommended_release_date", "today")
     def _should_release(self):
         for r in self:
-            if fields.Date.today() < r.recommended_release_date:
+            if r.today < r.recommended_release_date:
                 r.should_be_released = False
             else:
                 r.should_be_released = True
 
-    @api.depends("recommended_release_date", "buffer")
+    @api.depends("recommended_release_date", "buffer", "today")
     def _get_buffer_penetration(self):
         nw_days = self.env["otif100.nwd"].search_read(
             [('company_id', '=', self.env.user.parent_id.name)], ['nwds'])
@@ -119,21 +123,24 @@ class Work_order(models.Model):
             Buffer_comsumption = 0
             if r.buffer > 0:
                 cur_date = r.recommended_release_date
-                if cur_date <= fields.Date.today():
+                if cur_date <= r.today:
                     lapso = 1
                 else:
                     lapso = -1
-                while cur_date != fields.Date.today():
+                while cur_date != r.today:
                     if cur_date not in nw_dates:
                         Buffer_comsumption = Buffer_comsumption + lapso
                     cur_date = cur_date + timedelta(days=lapso)
                 r.buffer_penetration = 100 * Buffer_comsumption / r.buffer
 
-    @api.depends("buffer_penetration")
+    @api.depends("buffer_penetration", "is_released")
     def _get_buffer_status(self):
         for r in self:
             if r.buffer_penetration < 0:
-                r.buffer_status = '4. cyan'
+                if r.is_released:
+                    r.buffer_status = '3. green'  # Para no confundir en piso
+                else:
+                    r.buffer_status = '4. cyan'
             elif r.buffer_penetration < 33.01:
                 r.buffer_status = '3. green'
             elif r.buffer_penetration < 66.01:
@@ -167,3 +174,8 @@ class Work_order(models.Model):
                 r.need_action = True
             else:
                 r.need_action = False
+
+    @api.multi
+    def _get_today_date(self):
+        for r in self:
+            r.today = fields.Date.today()
