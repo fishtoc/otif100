@@ -17,5 +17,6 @@
         'views/family.xml',
         'views/sku.xml',
         'views/nonworkingdays.xml',
+        'views/plant.xml',
     ]
 }
