@@ -30,6 +30,18 @@ class Sku(models.Model):
         readonly="1",
         default=lambda self: self.env.user.parent_id.name,
     )
+    parts_per_hour_1 = fields.Float(
+        string="Parts per hour CCR 1",
+        default=0,
+    )
+    parts_per_hour_2 = fields.Float(
+        string="Parts per hour CCR 2",
+        default=0,
+    )
+    parts_per_hour_3 = fields.Float(
+        string="Parts per hour CCR 3",
+        default=0,
+    )
     _sql_constraints = [
         ("name_unique",
          "UNIQUE(name)",

@@ -23,6 +23,33 @@ class Work_order(models.Model):
         string="Total qty",
         default=0.0,
     )
+    qty_before_1 = fields.Float(  # Qty not processed by CCRi
+        default=0.0,
+    )
+    parts_per_hour_1 = fields.Float(
+        related="sku_id.parts_per_hour_1",
+    )
+    hours_ccr_1 = fields.Float(
+        compute="_get_hours_ccr_1",
+    )
+    qty_before_2 = fields.Float(
+        default=0.0,
+    )
+    parts_per_hour_2 = fields.Float(
+        related="sku_id.parts_per_hour_2",
+    )
+    hours_ccr_2 = fields.Float(
+        compute="_get_hours_ccr_2",
+    )
+    qty_before_3 = fields.Float(
+        default=0.0,
+    )
+    parts_per_hour_3 = fields.Float(
+        related="sku_id.parts_per_hour_3",
+    )
+    hours_ccr_3 = fields.Float(
+        compute="_get_hours_ccr_3",
+    )
     work_center = fields.Char(
         string="Work center",
         default="",
@@ -159,7 +186,7 @@ class Work_order(models.Model):
     def _get_action(self):
         for r in self:
             if r.is_released and not r.should_be_released:
-                r.action_to_take = 'FREEZE THIS ORDER NOW'
+                r.action_to_take = 'FREEZE UNLESS RELEASED BY LOAD CONTROL'
             elif not r.is_released and r.should_be_released:
                 r.action_to_take = 'RELEASE THIS ORDER ASAP'
             elif not r.is_released and not r.should_be_released:
@@ -179,3 +206,24 @@ class Work_order(models.Model):
     def _get_today_date(self):
         for r in self:
             r.today = fields.Date.today()
+
+    @api.depends("is_released")
+    def _get_hours_ccr_1(self):
+        for r in self:
+            r.hours_ccr_1 = 0
+            if r.is_released and r.parts_per_hour_1 > 0:
+                r.hours_ccr_1 = r.qty_before_1 / r.parts_per_hour_1
+
+    @api.depends("is_released")
+    def _get_hours_ccr_2(self):
+        for r in self:
+            r.hours_ccr_2 = 0
+            if r.is_released and r.parts_per_hour_2 > 0:
+                r.hours_ccr_2 = r.qty_before_2 / r.parts_per_hour_2
+
+    @api.depends("is_released")
+    def _get_hours_ccr_3(self):
+        for r in self:
+            r.hours_ccr_3 = 0
+            if r.is_released and r.parts_per_hour_3 > 0:
+                r.hours_ccr_3 = r.qty_before_3 / r.parts_per_hour_3
