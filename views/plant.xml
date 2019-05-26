@@ -5,19 +5,32 @@
     <field name="arch" type="xml">
       <form string="Plant form">
         <sheet>
-          <group>
-            <field name="name"/>
-            <field name="standard_dt"/>
-            <field name="standard_pd"/>
-            <field name="early_release"/>
-            <field name="plant_full" invisible="1"/>
-            <field name="hours_day_1"/>
-            <field name="load_front_1" widget="progressbar"/>
-            <field name="hours_day_2"/>
-            <field name="load_front_2" widget="progressbar"/>
-            <field name="hours_day_3"/>
-            <field name="load_front_3" widget="progressbar"/>
-            <field name="company_id" invisible="1"/>
+          <group string="General parameters">
+            <group>
+              <field name="name"/>
+              <field name="standard_dt"/>
+              <field name="standard_pd"/>
+            </group>
+            <group>
+              <field name="early_release"/>
+              <field name="min_buffer"/>
+              <field name="plant_full" invisible="1"/>
+            </group>
+          </group>
+          <group string="CCRs - Capacity Constrained Resources">
+            <group>
+              <field name="hours_day_1"/>
+              <field name="load_front_1" widget="progressbar"/>
+            </group>
+            <group>
+              <field name="hours_day_2"/>
+              <field name="load_front_2" widget="progressbar"/>
+            </group>
+            <group>
+              <field name="hours_day_3"/>
+              <field name="load_front_3" widget="progressbar"/>
+              <field name="company_id" invisible="1"/>
+            </group>
           </group>
         </sheet>
       </form>
@@ -28,7 +41,7 @@
     <field name="name">plant.tree</field>
     <field name="model">otif100.plant</field>
     <field name="arch" type="xml">
-      <tree string="Plant tree"
+      <tree string="Production line tree"
             decoration-danger="plant_full == True"
             decoration-success="plant_full == False">
         <field name="name"/>
@@ -41,10 +54,10 @@
   </record>
 
   <record model="ir.actions.act_window" id="plant_list_action">
-    <field name="name">Plant status and parameters</field>
+    <field name="name">Production line status and parameters</field>
     <field name="res_model">otif100.plant</field>
     <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
   </record>
-  <menuitem id="plant_menu" name="Plant status" parent="load_control_menu" action="plant_list_action"/>
+  <menuitem id="plant_menu" name="Production line status" parent="load_control_menu" action="plant_list_action"/>
 </odoo>

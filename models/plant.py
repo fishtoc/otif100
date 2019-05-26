@@ -6,7 +6,7 @@ class Plant(models.Model):
     _name = 'otif100.plant'
 
     name = fields.Char(
-        string="Plant name",
+        string="Production line name",
     )
     company_id = fields.Char(  # Para filtrar por company
         required=True,
@@ -17,7 +17,7 @@ class Plant(models.Model):
     _sql_constraints = [
         ("name_unique",
          "UNIQUE(company_id)",
-         "There must be only one plant")
+         "There must be only one production line")
     ]
     standard_dt = fields.Integer(
         string="Standard Delivery Time",
@@ -66,12 +66,10 @@ class Plant(models.Model):
         compute="_get_release_status",
     )
     min_buffer = fields.Integer(
-        compute="_get_min_buffer",
+        string="Target WIP in working days",
+        help="Number of days that you consider a healthy WIP for this line",
+        default=5,
     )
-
-    @api.one
-    def _get_min_buffer(self):
-        self.min_buffer = 5
 
     @api.depends("load_front_1", "load_front_2", "load_front_3")
     def _get_plant_status(self):
@@ -88,36 +86,45 @@ class Plant(models.Model):
 
     @api.depends("min_buffer", "hours_day_1")
     def _get_load_front_1(self):
-        w_orders = self.env["otif100.work_order"].search_read(
-            [('company_id', '=', self.env.user.parent_id.name)], ['hours_ccr_1'])
-        hrs_wos = [i['hours_ccr_1'] for i in w_orders]
-        hours_ccr = 0
-        for hr_wo in hrs_wos:
-            hours_ccr = hours_ccr + hr_wo
-        self.load_front_1 = 100 * hours_ccr / \
-            (self.min_buffer * 0.60 * self.hours_day_1)
+        self.load_front_1 = 0
+        if self.min_buffer * self.hours_day_1 > 0:
+            w_orders = self.env["otif100.work_order"].search_read(
+                [('company_id', '=', self.env.user.parent_id.name)],
+                ['hours_ccr_1'])
+            hrs_wos = [i['hours_ccr_1'] for i in w_orders]
+            hours_ccr = 0
+            for hr_wo in hrs_wos:
+                hours_ccr = hours_ccr + hr_wo
+            self.load_front_1 = 100 * hours_ccr / \
+                (self.min_buffer * self.hours_day_1)
 
     @api.depends("min_buffer", "hours_day_2")
     def _get_load_front_2(self):
-        w_orders = self.env["otif100.work_order"].search_read(
-            [('company_id', '=', self.env.user.parent_id.name)], ['hours_ccr_2'])
-        hrs_wos = [i['hours_ccr_2'] for i in w_orders]
-        hours_ccr = 0
-        for hr_wo in hrs_wos:
-            hours_ccr = hours_ccr + hr_wo
-        self.load_front_2 = 100 * hours_ccr / \
-            (self.min_buffer * 0.60 * self.hours_day_2)
+        self.load_front_2 = 0
+        if self.min_buffer * self.hours_day_2 > 0:
+            w_orders = self.env["otif100.work_order"].search_read(
+                [('company_id', '=', self.env.user.parent_id.name)],
+                ['hours_ccr_2'])
+            hrs_wos = [i['hours_ccr_2'] for i in w_orders]
+            hours_ccr = 0
+            for hr_wo in hrs_wos:
+                hours_ccr = hours_ccr + hr_wo
+            self.load_front_2 = 100 * hours_ccr / \
+                (self.min_buffer * self.hours_day_2)
 
     @api.depends("min_buffer", "hours_day_3")
     def _get_load_front_3(self):
-        w_orders = self.env["otif100.work_order"].search_read(
-            [('company_id', '=', self.env.user.parent_id.name)], ['hours_ccr_3'])
-        hrs_wos = [i['hours_ccr_3'] for i in w_orders]
-        hours_ccr = 0
-        for hr_wo in hrs_wos:
-            hours_ccr = hours_ccr + hr_wo
-        self.load_front_3 = 100 * hours_ccr / \
-            (self.min_buffer * 0.60 * self.hours_day_3)
+        self.load_front_3 = 0
+        if self.min_buffer * self.hours_day_3 > 0:
+            w_orders = self.env["otif100.work_order"].search_read(
+                [('company_id', '=', self.env.user.parent_id.name)],
+                ['hours_ccr_3'])
+            hrs_wos = [i['hours_ccr_3'] for i in w_orders]
+            hours_ccr = 0
+            for hr_wo in hrs_wos:
+                hours_ccr = hours_ccr + hr_wo
+            self.load_front_3 = 100 * hours_ccr / \
+                (self.min_buffer * self.hours_day_3)
 
     @api.depends("standard_dt")
     def _get_standard_pd(self):
