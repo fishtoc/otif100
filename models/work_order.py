@@ -32,6 +32,9 @@ class Work_order(models.Model):
     hours_ccr_1 = fields.Float(
         compute="_get_hours_ccr_1",
     )
+    total_hours_ccr_1 = fields.Float(
+        compute="_get_total_hours_ccr_1",
+    )
     qty_before_2 = fields.Float(
         default=0.0,
     )
@@ -41,6 +44,9 @@ class Work_order(models.Model):
     hours_ccr_2 = fields.Float(
         compute="_get_hours_ccr_2",
     )
+    total_hours_ccr_2 = fields.Float(
+        compute="_get_total_hours_ccr_2",
+    )
     qty_before_3 = fields.Float(
         default=0.0,
     )
@@ -49,6 +55,9 @@ class Work_order(models.Model):
     )
     hours_ccr_3 = fields.Float(
         compute="_get_hours_ccr_3",
+    )
+    total_hours_ccr_3 = fields.Float(
+        compute="_get_total_hours_ccr_3",
     )
     work_center = fields.Char(
         string="Work center",
@@ -207,23 +216,44 @@ class Work_order(models.Model):
         for r in self:
             r.today = fields.Date.today()
 
-    @api.depends("is_released")
+    @api.depends("is_released", "total_hours_ccr_1")
     def _get_hours_ccr_1(self):
         for r in self:
             r.hours_ccr_1 = 0
-            if r.is_released and r.parts_per_hour_1 > 0:
-                r.hours_ccr_1 = r.qty_before_1 / r.parts_per_hour_1
+            if r.is_released:
+                r.hours_ccr_1 = r.total_hours_ccr_1
 
-    @api.depends("is_released")
+    @api.depends("is_released", "total_hours_ccr_2")
     def _get_hours_ccr_2(self):
         for r in self:
             r.hours_ccr_2 = 0
-            if r.is_released and r.parts_per_hour_2 > 0:
-                r.hours_ccr_2 = r.qty_before_2 / r.parts_per_hour_2
+            if r.is_released:
+                r.hours_ccr_2 = r.total_hours_ccr_2
 
-    @api.depends("is_released")
+    @api.depends("is_released", "total_hours_ccr_3")
     def _get_hours_ccr_3(self):
         for r in self:
             r.hours_ccr_3 = 0
-            if r.is_released and r.parts_per_hour_3 > 0:
-                r.hours_ccr_3 = r.qty_before_3 / r.parts_per_hour_3
+            if r.is_released:
+                r.hours_ccr_3 = r.total_hours_ccr_3
+
+    @api.depends("qty_before_1")
+    def _get_total_hours_ccr_1(self):
+        for r in self:
+            r.total_hours_ccr_1 = 0
+            if r.parts_per_hour_1 > 0:
+                r.total_hours_ccr_1 = r.qty_before_1 / r.parts_per_hour_1
+
+    @api.depends("qty_before_2")
+    def _get_total_hours_ccr_2(self):
+        for r in self:
+            r.total_hours_ccr_2 = 0
+            if r.parts_per_hour_2 > 0:
+                r.total_hours_ccr_2 = r.qty_before_2 / r.parts_per_hour_2
+
+    @api.depends("qty_before_3")
+    def _get_total_hours_ccr_3(self):
+        for r in self:
+            r.total_hours_ccr_3 = 0
+            if r.parts_per_hour_3 > 0:
+                r.total_hours_ccr_3 = r.qty_before_3 / r.parts_per_hour_3

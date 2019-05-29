@@ -10,26 +10,31 @@
               <field name="name"/>
               <field name="standard_dt"/>
               <field name="standard_pd"/>
+              <field name="earliest_date"/>
             </group>
             <group>
               <field name="early_release"/>
               <field name="min_buffer"/>
+              <field name="suggested_date"/>
               <field name="plant_full" invisible="1"/>
+              <field name="company_id" invisible="1"/>
             </group>
           </group>
           <group string="CCRs - Capacity Constrained Resources">
             <group>
               <field name="hours_day_1"/>
               <field name="load_front_1" widget="progressbar"/>
+              <field name="total_days_1"/>
             </group>
             <group>
               <field name="hours_day_2"/>
               <field name="load_front_2" widget="progressbar"/>
+              <field name="total_days_2"/>
             </group>
             <group>
               <field name="hours_day_3"/>
               <field name="load_front_3" widget="progressbar"/>
-              <field name="company_id" invisible="1"/>
+              <field name="total_days_3"/>
             </group>
           </group>
         </sheet>
@@ -47,7 +52,7 @@
         <field name="name"/>
         <field name="plant_full" invisible="1"/>
         <field name="early_release"/>
-        <field name="standard_pd"/>
+        <field name="suggested_date"/>
         <field name="company_id" invisible="1"/>
       </tree>
     </field>

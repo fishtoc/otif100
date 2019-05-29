@@ -27,7 +27,7 @@
     <field name="name">work_order.tree</field>
     <field name="model">otif100.work_order</field>
     <field name="arch" type="xml">
-      <tree string="Work Order tree"
+      <tree string="Work Order tree" default_order='due_date'
             decoration-bf="buffer_status == '0. black'"
             decoration-danger="buffer_status == '1. red'"
             decoration-warning="buffer_status == '2. yellow'"
