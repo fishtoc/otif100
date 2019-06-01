@@ -20,24 +20,21 @@ class Plant(models.Model):
          "There can be only one production line")
     ]
     standard_dt = fields.Integer(
-        string="Standard Market Delivery Time",
-        help="Standard delivery time in working days for regular orders",
+        string="Desired Delivery Time",
+        help="Desired delivery time in working days",
         default=20,
     )
     standard_pd = fields.Date(
-        string="Market Due Date",
+        string="Desired Date",
         compute="_get_standard_pd",
-        help="Quote this date unless load pushes dates forward."
+        help="Delivery date calculated with Desired Delivery Date",
     )
     earliest_date = fields.Date(
-        string="Earliest Date",
-        help="If future load is less than capacity, this will show today. \
-        Add at least one buffer corresponding to the product family you \
-        are quoting.",
         compute="_get_earliest_date",
     )
     suggested_date = fields.Date(
-        string="Suggested Date to promise",
+        string="Date to promise",
+        help="According to load, the latest between desired and what load allows.",
         compute="_get_suggested_date",
     )
     hours_day_1 = fields.Float(

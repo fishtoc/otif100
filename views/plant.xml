@@ -5,36 +5,46 @@
     <field name="arch" type="xml">
       <form string="Plant form">
         <sheet>
-          <group string="General parameters">
-            <group>
+          <group col="3">
+            <group string="Short Horizon settings">
               <field name="name"/>
+              <field name="min_buffer"/>
+              <field name="early_release"/>
+            </group>
+            <group string="Desired Date to Promise">
               <field name="standard_dt"/>
               <field name="standard_pd"/>
-              <field name="earliest_date"/>
             </group>
-            <group>
-              <field name="early_release"/>
-              <field name="min_buffer"/>
-              <field name="suggested_date"/>
+            <group string="Calculated Date to Promise">
+              <h2><field name="suggested_date"/></h2>
               <field name="plant_full" invisible="1"/>
               <field name="company_id" invisible="1"/>
             </group>
           </group>
-          <group string="CCRs - Capacity Constrained Resources">
+          <group string="CCRs - Capacity Constrained Resources" col="3">
             <group>
-              <field name="hours_day_1"/>
-              <field name="load_front_1" widget="progressbar"/>
-              <field name="total_days_1"/>
+              <field name="hours_day_1"
+                     attrs="{'invisible': [('load_front_1','=',0)]}"/>
+              <field name="load_front_1" widget="progressbar"
+                     attrs="{'invisible': [('load_front_1','=',0)]}"/>
+              <field name="total_days_1"
+                     attrs="{'invisible': [('load_front_1','=',0)]}"/>
             </group>
             <group>
-              <field name="hours_day_2"/>
-              <field name="load_front_2" widget="progressbar"/>
-              <field name="total_days_2"/>
+              <field name="hours_day_2"
+                     attrs="{'invisible': [('load_front_2','=',0)]}"/>
+              <field name="load_front_2" widget="progressbar"
+                     attrs="{'invisible': [('load_front_2','=',0)]}"/>
+              <field name="total_days_2"
+                     attrs="{'invisible': [('load_front_2','=',0)]}"/>
             </group>
             <group>
-              <field name="hours_day_3"/>
-              <field name="load_front_3" widget="progressbar"/>
-              <field name="total_days_3"/>
+              <field name="hours_day_3"
+                     attrs="{'invisible': [('load_front_3','=',0)]}"/>
+              <field name="load_front_3" widget="progressbar"
+                     attrs="{'invisible': [('load_front_3','=',0)]}"/>
+              <field name="total_days_3"
+                     attrs="{'invisible': [('load_front_3','=',0)]}"/>
             </group>
           </group>
         </sheet>
@@ -59,10 +69,10 @@
   </record>
 
   <record model="ir.actions.act_window" id="plant_list_action">
-    <field name="name">Production line status and parameters</field>
+    <field name="name">Production line status and Dates for future orders</field>
     <field name="res_model">otif100.plant</field>
     <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
   </record>
-  <menuitem id="plant_menu" name="Production line status" parent="load_control_menu" action="plant_list_action"/>
+  <menuitem id="plant_menu" name="Status and Dates" parent="load_control_menu" action="plant_list_action"/>
 </odoo>
