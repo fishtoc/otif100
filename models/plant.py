@@ -37,6 +37,18 @@ class Plant(models.Model):
         help="According to load, the latest between desired and what load allows.",
         compute="_get_suggested_date",
     )
+    ccr_1 = fields.Char(
+        string="CCR 1",
+        default="CCR 1 name",
+    )
+    ccr_2 = fields.Char(
+        string="CCR 2",
+        default="CCR 2 name",
+    )
+    ccr_3 = fields.Char(
+        string="CCR 3",
+        default="CCR 3 name",
+    )
     hours_day_1 = fields.Float(
         string="Hours per working day CCR 1",
         default=8.0,
