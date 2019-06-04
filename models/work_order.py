@@ -82,9 +82,9 @@ class Work_order(models.Model):
         readonly="1",
         default=lambda self: self.env.user.parent_id.name,
     )
-    _sql_constraints = [  # ****** REVISAR SI constrains o esto
+    _sql_constraints = [
         ("name_unique",
-         "UNIQUE(wo_id)",
+         "UNIQUE(wo_id,company_id)",
          "Work order identifier must be unique")
     ]
     recommended_release_date = fields.Date(

@@ -26,7 +26,7 @@ class Family(models.Model):
     )
     _sql_constraints = [
         ("name_unique",
-         "UNIQUE(name)",
+         "UNIQUE(name,company_id)",
          "Family name must be unique"),
     ]
     espacio_derecha = fields.Char(  # En lista, para que buffer quede mejor

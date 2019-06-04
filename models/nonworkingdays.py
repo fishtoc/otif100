@@ -26,6 +26,11 @@ class Nonworkingdays(models.Model):
         readonly="1",
         default=lambda self: self.env.user.parent_id.name,
     )
+    _sql_constraints = [
+        ("name_unique",
+         "UNIQUE(nwds,company_id)",
+         "Do not repeat dates"),
+    ]
 
     @api.depends("nwds")
     def _get_dayofweek(self):

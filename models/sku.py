@@ -44,6 +44,6 @@ class Sku(models.Model):
     )
     _sql_constraints = [
         ("name_unique",
-         "UNIQUE(name)",
+         "UNIQUE(name,company_id)",
          "SKU name must be unique")
     ]
