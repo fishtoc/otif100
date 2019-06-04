@@ -25,6 +25,8 @@
             <group>
               <field name="ccr_1"
                      attrs="{'invisible': [('load_front_1','=',0)]}"/>
+              <field name="hours_day_1"
+                     attrs="{'invisible': [('load_front_1','=',0)]}"/>
               <field name="load_front_1" widget="progressbar"
                      attrs="{'invisible': [('load_front_1','=',0)]}"/>
               <field name="total_days_1"
