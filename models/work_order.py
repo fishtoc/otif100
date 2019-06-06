@@ -24,6 +24,7 @@ class Work_order(models.Model):
         default=0.0,
     )
     qty_before_1 = fields.Float(  # Qty not processed by CCRi
+        string="Qty before CCR 1",
         default=0.0,
     )
     parts_per_hour_1 = fields.Float(
@@ -36,6 +37,7 @@ class Work_order(models.Model):
         compute="_get_total_hours_ccr_1",
     )
     qty_before_2 = fields.Float(
+        string="Qty before CCR 2",
         default=0.0,
     )
     parts_per_hour_2 = fields.Float(
@@ -48,6 +50,7 @@ class Work_order(models.Model):
         compute="_get_total_hours_ccr_2",
     )
     qty_before_3 = fields.Float(
+        string="Qty before CCR 3",
         default=0.0,
     )
     parts_per_hour_3 = fields.Float(

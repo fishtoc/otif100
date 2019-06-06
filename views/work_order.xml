@@ -6,17 +6,26 @@
       <form string="Work Order form">
         <sheet>
           <group>
-            <field name="action_to_take"/>
-            <field name="buffer_penetration" widget="progressbar"/>
-            <field name="wo_id"/>
-            <field name="due_date"/>
-            <field name="buffer_status"/>
-            <field name="cli_id"/>
-            <field name="sku_id"/>
-            <field name="qty_total"/>
-            <field name="recommended_release_date"/>
-            <field name="actual_release_date"/>
-            <field name="buffer"/>
+            <group string="Order Data">
+              <field name="wo_id"/>
+              <field name="sku_id"/>
+              <field name="cli_id"/>
+              <field name="due_date"/>
+              <field name="qty_total"/>
+            </group>
+            <group string="Status">
+              <field name="action_to_take"/>
+              <field name="buffer_status"/>
+              <field name="buffer_penetration" widget="progressbar"/>
+            </group>
+            <group string="Order details">
+              <field name="qty_before_1"/>
+              <field name="qty_before_2"/>
+              <field name="qty_before_3"/>
+              <field name="recommended_release_date"/>
+              <field name="actual_release_date"/>
+              <field name="buffer"/>
+            </group>
           </group>
         </sheet>
       </form>

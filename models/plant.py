@@ -257,8 +257,12 @@ class Plant(models.Model):
             pos_date = pos_date - 1
         if tot_av_wds[pos_date][0] > today:
             ext_wds = max_wds - tot_av_wds[pos_date][1]
-            self.earliest_date = tot_av_wds[pos_date][0] + \
-                timedelta(days=ext_wds)
+            cur_date = tot_av_wds[pos_date][0]
+            while ext_wds >= 0:
+                if cur_date not in nw_dates:
+                    ext_wds = ext_wds - 1
+                cur_date = cur_date + timedelta(days=1)
+            self.earliest_date = cur_date
 
     @api.depends("earliest_date", "standard_dt")
     def _get_suggested_date(self):
