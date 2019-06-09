@@ -92,7 +92,7 @@ class Work_order(models.Model):
     ]
     recommended_release_date = fields.Date(
         compute="_get_recommended_release_date",
-        string="Recommended Release Date",
+        string="Scheduled Release Date",
         store=False,
     )
     should_be_released = fields.Boolean(

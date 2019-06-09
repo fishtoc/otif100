@@ -17,6 +17,7 @@
               <field name="action_to_take"/>
               <field name="buffer_status"/>
               <field name="buffer_penetration" widget="progressbar"/>
+              <field name="work_center"/>
             </group>
             <group string="Order details">
               <field name="qty_before_1"/>
