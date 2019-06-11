@@ -1,0 +1,18 @@
+<odoo>
+  <record model="ir.actions.act_url" id="tutorials_action">
+    <field name="name">Tutorials</field>
+    <field name="type">ir.actions.act_url</field>
+    <field name="target">new</field>
+    <field name="url">https://www.otif100.com/tutorials</field>
+  </record>
+  <menuitem id="tut_menu" name="Tutorials" parent="help_menu" action="tutorials_action"/>
+
+  <record model="ir.actions.act_url" id="knowledge_action">
+    <field name="name">Knowledge</field>
+    <field name="type">ir.actions.act_url</field>
+    <field name="target">new</field>
+    <field name="url">https://www.otif100.com/knowledge</field>
+  </record>
+  <menuitem id="know_menu" name="Knowledge" parent="help_menu" action="knowledge_action"/>
+
+</odoo>

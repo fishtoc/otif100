@@ -18,5 +18,6 @@
         'views/sku.xml',
         'views/nonworkingdays.xml',
         'views/plant.xml',
+        'views/help.xml',
     ]
 }

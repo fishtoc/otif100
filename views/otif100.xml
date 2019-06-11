@@ -4,4 +4,5 @@
   <menuitem id="production_menu" name="Production" parent="main_otif100_menu"/>
   <menuitem id="configuration_menu" name="Configuration" parent="main_otif100_menu"/>
   <menuitem id="load_control_menu" name="Load Control" parent="main_otif100_menu"/>
+  <menuitem id="help_menu" name="Help" parent="main_otif100_menu"/>
 </odoo>
