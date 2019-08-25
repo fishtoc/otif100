@@ -14,10 +14,15 @@ class Work_order(models.Model):
     )
     sku_id = fields.Many2one(
         comodel_name="otif100.sku",
-        string='Product SKU',
+        string='Product Code',
         required=True,
         ondelete="cascade",
         help="Your product code",
+    )
+    sku_description = fields.Char(  # It allows different descriptions for same sku
+        string='Product description',
+        default='',
+        help='Custom description for this work order',
     )
     qty_total = fields.Float(
         string="Total qty",
