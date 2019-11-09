@@ -68,7 +68,8 @@
         <field name="wo_id"/>
         <field name="sku_id"/>
         <field name="due_date"/>
-        <filter name="action_required" string="Decision required" domain="[('need_action', '=', 'True')]"/>
+        <filter name="action_required" string="On Alert" domain="[('need_action', '=', 'True')]"/>
+        <filter name="is_released" string="Released" domain="[('is_released', '=', 'True')]"/>
         <group string="Group by">
           <filter name="by_customer" string="Customer" context="{'group_by': 'cli_id'}"/>
           <filter name="by_workcenter" string="Work center" context="{'group_by': 'work_center'}"/>

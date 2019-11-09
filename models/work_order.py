@@ -118,7 +118,7 @@ class Work_order(models.Model):
     is_released = fields.Boolean(
         compute="_check_released",
         string="Already released",
-        store=False,
+        store=True,
     )
     action_to_take = fields.Char(
         compute="_get_action",
@@ -128,7 +128,7 @@ class Work_order(models.Model):
     need_action = fields.Boolean(
         compute="_check_action",
         default=False,
-        string="NEED ATTENTION",
+        string="ALERT",
         store=True,
     )
     today = fields.Date(
