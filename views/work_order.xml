@@ -43,7 +43,8 @@
             decoration-danger="buffer_status == '1. red'"
             decoration-warning="buffer_status == '2. yellow'"
             decoration-success="buffer_status == '3. green'"
-            decoration-info="buffer_status == '4. cyan'">
+            decoration-info="buffer_status == '4. cyan'"
+            editable="top">
         <field name="need_action"/>
         <field name="wo_id"/>
         <field name="cli_id"/>
