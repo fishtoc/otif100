@@ -3,7 +3,7 @@
     <field name="name">Tutorials</field>
     <field name="type">ir.actions.act_url</field>
     <field name="target">new</field>
-    <field name="url">https://www.otif100.com/tutorials</field>
+    <field name="url">./tutorials</field>
   </record>
   <menuitem id="tut_menu" name="Tutorials" parent="help_menu" action="tutorials_action"/>
 
@@ -11,7 +11,7 @@
     <field name="name">Knowledge</field>
     <field name="type">ir.actions.act_url</field>
     <field name="target">new</field>
-    <field name="url">https://www.otif100.com/knowledge</field>
+    <field name="url">./knowledge</field>
   </record>
   <menuitem id="know_menu" name="Knowledge" parent="help_menu" action="knowledge_action"/>
 
