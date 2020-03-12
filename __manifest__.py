@@ -19,5 +19,6 @@
         'views/nonworkingdays.xml',
         'views/plant.xml',
         'views/help.xml',
-    ]
+    ],
+    'application': True,
 }
