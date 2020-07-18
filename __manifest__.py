@@ -2,11 +2,12 @@
     'name': 'OTIF 100',
     'description': 'Production control system to achieve 100% On Time In Full delivery',
     'author': 'Matias Birrell R.',
-    'website': 'https://www.ingeser.cl',
+    'website': 'https://www.goldfishltd.cl',
     'category': 'PRO',
-    'version': '1.1.0',
+    'version': '1.2.0',
     'depends': [
         'base',
+        'mail',
     ],
     'data': [  # Todos los archivos CSV y XML que va a detectar el sistema
         'security/security.xml',

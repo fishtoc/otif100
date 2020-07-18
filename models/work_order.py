@@ -265,3 +265,20 @@ class Work_order(models.Model):
             r.total_hours_ccr_3 = 0
             if r.parts_per_hour_3 > 0:
                 r.total_hours_ccr_3 = r.qty_before_3 / r.parts_per_hour_3
+
+    @api.multi
+    def mass_release(self):
+        today_date = fields.Date.today()
+        worecs = self.env['otif100.work_order'].browse(
+            self._context.get('active_ids'))
+        for worec in worecs:
+            worec.write({'actual_release_date': today_date, })
+        return {}
+
+    @api.multi
+    def mass_freeze(self):
+        worecs = self.env['otif100.work_order'].browse(
+            self._context.get('active_ids'))
+        for worec in worecs:
+            worec.write({'actual_release_date': None, })
+        return {}

@@ -43,8 +43,7 @@
             decoration-danger="buffer_status == '1. red'"
             decoration-warning="buffer_status == '2. yellow'"
             decoration-success="buffer_status == '3. green'"
-            decoration-info="buffer_status == '4. cyan'"
-            editable="top">
+            decoration-info="buffer_status == '4. cyan'">
         <field name="need_action"/>
         <field name="wo_id"/>
         <field name="cli_id"/>
@@ -71,6 +70,9 @@
         <field name="due_date"/>
         <filter name="action_required" string="On Alert" domain="[('need_action', '=', 'True')]"/>
         <filter name="is_released" string="Released" domain="[('is_released', '=', 'True')]"/>
+        <filter name="loading_1" string="Loading CCR1" domain="[('qty_before_1', '>', '0')]"/>
+        <filter name="loading_2" string="Loading CCR2" domain="[('qty_before_2', '>', '0')]"/>
+        <filter name="loading_3" string="Loading CCR3" domain="[('qty_before_3', '>', '0')]"/>
         <group string="Group by">
           <filter name="by_customer" string="Customer" context="{'group_by': 'cli_id'}"/>
           <filter name="by_workcenter" string="Work center" context="{'group_by': 'work_center'}"/>
@@ -79,6 +81,27 @@
       </search>
     </field>
   </record>
+
+  <record model="ir.actions.server" id="ir_massive_release_action">
+    <field name="name">Release marked</field>
+    <field name="model_id" ref="model_otif100_work_order"/>
+    <field name="binding_model_id" ref="model_otif100_work_order"/>
+    <field name="key2">client_action_multi</field>
+    <field name="key">action</field>
+    <field name="state">code</field>
+    <field name="code">model.mass_release()</field>
+  </record>
+
+  <record model="ir.actions.server" id="ir_massive_freeze_action">
+    <field name="name">Freeze marked</field>
+    <field name="model_id" ref="model_otif100_work_order"/>
+    <field name="binding_model_id" ref="model_otif100_work_order"/>
+    <field name="key2">client_action_multi</field>
+    <field name="key">action</field>
+    <field name="state">code</field>
+    <field name="code">model.mass_freeze()</field>
+  </record>
+
 
   <record model="ir.actions.act_window" id="work_order_list_action">
     <field name="name">Work Orders</field>
