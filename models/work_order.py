@@ -84,6 +84,14 @@ class Work_order(models.Model):
         string="Time buffer",
         related="sku_id.buffer",
     )
+    stock_buffer = fields.Float(
+        string="Stock buffer",
+        default=0.0,
+    )
+    onhand = fields.Float(
+        string="Stock",
+        default=0.0,
+    )
     company_id = fields.Char(  # Para filtrar por company
         required=True,
         store=True,
@@ -111,8 +119,8 @@ class Work_order(models.Model):
         store=False,
     )
     buffer_status = fields.Char(
-        string="Buffer color",
         compute="_get_buffer_status",
+        string="Buffer color",
         store=True,
     )
     is_released = fields.Boolean(
@@ -129,6 +137,12 @@ class Work_order(models.Model):
         compute="_check_action",
         default=False,
         string="ALERT",
+        store=True,
+    )
+    order_type = fields.Char(
+        compute="_get_type",
+        string="Type",
+        help="MTO: Make to Order - MTA: Make to Availability",
         store=True,
     )
     today = fields.Date(
@@ -158,24 +172,37 @@ class Work_order(models.Model):
             else:
                 r.should_be_released = True
 
-    @api.depends("recommended_release_date", "buffer", "today")
+    @api.depends("stock_buffer")
+    def _get_type(self):
+        for r in self:
+            if r.stock_buffer > 0:
+                r.order_type = "MTA"
+                r.actual_release_date = r.today
+                r.cli_id = "STOCK"
+            else:
+                r.order_type = "MTO"
+
+    @api.depends("recommended_release_date", "buffer", "today", "stock_buffer", "onhand")
     def _get_buffer_penetration(self):
         nw_days = self.env["otif100.nwd"].search_read(
             [('company_id', '=', self.env.user.parent_id.name)], ['nwds'])
         nw_dates = [i['nwds'] for i in nw_days]
         for r in self:
-            Buffer_comsumption = 0
-            if r.buffer > 0:
-                cur_date = r.recommended_release_date
-                if cur_date <= r.today:
-                    lapso = 1
-                else:
-                    lapso = -1
-                while cur_date != r.today:
-                    if cur_date not in nw_dates:
-                        Buffer_comsumption = Buffer_comsumption + lapso
-                    cur_date = cur_date + timedelta(days=lapso)
-                r.buffer_penetration = 100 * Buffer_comsumption / r.buffer
+            if r.stock_buffer > 0:
+                r.buffer_penetration = 100 * (1 - r.onhand / r.stock_buffer)
+            else:
+                Buffer_comsumption = 0
+                if r.buffer > 0:
+                    cur_date = r.recommended_release_date
+                    if cur_date <= r.today:
+                        lapso = 1
+                    else:
+                        lapso = -1
+                    while cur_date != r.today:
+                        if cur_date not in nw_dates:
+                            Buffer_comsumption = Buffer_comsumption + lapso
+                        cur_date = cur_date + timedelta(days=lapso)
+                    r.buffer_penetration = 100 * Buffer_comsumption / r.buffer
 
     @api.depends("buffer_penetration", "is_released")
     def _get_buffer_status(self):
@@ -199,17 +226,17 @@ class Work_order(models.Model):
         for r in self:
             r.is_released = r.actual_release_date
 
-    @api.depends("should_be_released", "is_released")
+    @api.depends("should_be_released", "is_released", "order_type")
     def _get_action(self):
         for r in self:
-            if r.is_released and not r.should_be_released:
-                r.action_to_take = 'FREEZE UNLESS RELEASED BY LOAD CONTROL'
-            elif not r.is_released and r.should_be_released:
-                r.action_to_take = 'RELEASE THIS ORDER ASAP'
-            elif not r.is_released and not r.should_be_released:
-                r.action_to_take = 'DO NOT PROCESS YET'
-            else:
-                r.action_to_take = 'PROCESS ACCORDING TO ITS COLOR'
+            r.action_to_take = 'PROCESS ACCORDING TO ITS COLOR'
+            if r.order_type == "MTO":
+                if r.is_released and not r.should_be_released:
+                    r.action_to_take = 'FREEZE UNLESS RELEASED BY LOAD CONTROL'
+                elif not r.is_released and r.should_be_released:
+                    r.action_to_take = 'RELEASE THIS ORDER ASAP'
+                elif not r.is_released and not r.should_be_released:
+                    r.action_to_take = 'DO NOT PROCESS YET'
 
     @api.depends("action_to_take")
     def _check_action(self):

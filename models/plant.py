@@ -53,28 +53,55 @@ class Plant(models.Model):
         string="Hours per working day CCR 1",
         default=8.0,
     )
+    reserved_mto_1 = fields.Float(
+        string="Cap % for MTO",
+        default=100,
+    )
     hours_day_2 = fields.Float(
         string="Hours per working day CCR 2",
         default=8.0,
+    )
+    reserved_mto_2 = fields.Float(
+        string="Cap % for MTO",
+        default=100,
     )
     hours_day_3 = fields.Float(
         string="Hours per working day CCR 3",
         default=8.0,
     )
-    load_front_1 = fields.Float(  # Load short horizon ~1/2 PBT
-        string="Load CCR 1",
-        help="Percentage of available capacity in half production buffer time",
+    reserved_mto_3 = fields.Float(
+        string="Cap % for MTO",
+        default=100,
+    )
+    load_front_1 = fields.Float(
+        string="Load MTO",
+        help="Percentage of used capacity in target WIP time",
         compute="_get_load_front_1",
     )
     load_front_2 = fields.Float(
-        string="Load CCR 2",
-        help="Percentage of available capacity in half production buffer time",
+        string="Load MTO",
+        help="Percentage of used reserved capacity in target WIP time",
         compute="_get_load_front_2",
     )
     load_front_3 = fields.Float(
-        string="Load CCR 3",
-        help="Percentage of available capacity in half production buffer time",
+        string="Load MTO",
+        help="Percentage of used reserved capacity in target WIP time",
         compute="_get_load_front_3",
+    )
+    load_mta_1 = fields.Float(
+        string="Load MTA",
+        help="Percentage of used reserved capacity in target WIP time",
+        compute="_get_load_mta_1",
+    )
+    load_mta_2 = fields.Float(
+        string="Load MTA",
+        help="Percentage of used reserved capacity in target WIP time",
+        compute="_get_load_mta_2",
+    )
+    load_mta_3 = fields.Float(
+        string="Load MTA",
+        help="Percentage of used reserved capacity in target WIP time",
+        compute="_get_load_mta_3",
     )
     plant_full = fields.Boolean(
         string="Full load",
@@ -88,21 +115,21 @@ class Plant(models.Model):
     )
     min_buffer = fields.Integer(
         string="Target WIP in working days",
-        help="A healthy WIP in days for this line, around 50%-60% of average buffer",
+        help="A healthy WIP in days for this line, around 50%-80% of average buffer",
         default=5,
     )
     total_days_1 = fields.Float(
-        string="Future load (days)",
+        string="Future MTO load",
         help="Total committed load in days",
         compute="_get_total_days_1",
     )
     total_days_2 = fields.Float(
-        string="Future load (days)",
+        string="Future MTO load",
         help="Total committed load in days",
         compute="_get_total_days_2",
     )
     total_days_3 = fields.Float(
-        string="Future load (days)",
+        string="Future MTO load",
         help="Total committed load in days",
         compute="_get_total_days_3",
     )
@@ -120,47 +147,101 @@ class Plant(models.Model):
         else:
             self.early_release = "Release some orders until this message changes"
 
-    @api.depends("min_buffer", "hours_day_1")
+    @api.depends("min_buffer", "hours_day_1", "reserved_mto_1")
     def _get_load_front_1(self):
         self.load_front_1 = 0
-        if self.min_buffer * self.hours_day_1 > 0:
+        capacity_reserved = self.min_buffer * \
+            self.hours_day_1 * self.reserved_mto_1 / 100
+        if capacity_reserved > 0:
             w_orders = self.env["otif100.work_order"].search_read(
-                [('company_id', '=', self.env.user.parent_id.name)],
+                [('company_id', '=', self.env.user.parent_id.name),
+                 ('order_type', '=', 'MTO')],
                 ['hours_ccr_1'])
             hrs_wos = [i['hours_ccr_1'] for i in w_orders]
             hours_ccr = 0
             for hr_wo in hrs_wos:
                 hours_ccr = hours_ccr + hr_wo
-            self.load_front_1 = 100 * hours_ccr / \
-                (self.min_buffer * self.hours_day_1)
+            self.load_front_1 = 100 * hours_ccr / capacity_reserved
 
-    @api.depends("min_buffer", "hours_day_2")
+    @api.depends("min_buffer", "hours_day_2", "reserved_mto_2")
     def _get_load_front_2(self):
         self.load_front_2 = 0
-        if self.min_buffer * self.hours_day_2 > 0:
+        capacity_reserved = self.min_buffer * \
+            self.hours_day_2 * self.reserved_mto_2 / 100
+        if capacity_reserved > 0:
             w_orders = self.env["otif100.work_order"].search_read(
-                [('company_id', '=', self.env.user.parent_id.name)],
+                [('company_id', '=', self.env.user.parent_id.name),
+                 ('order_type', '=', 'MTO')],
                 ['hours_ccr_2'])
             hrs_wos = [i['hours_ccr_2'] for i in w_orders]
             hours_ccr = 0
             for hr_wo in hrs_wos:
                 hours_ccr = hours_ccr + hr_wo
-            self.load_front_2 = 100 * hours_ccr / \
-                (self.min_buffer * self.hours_day_2)
+            self.load_front_2 = 100 * hours_ccr / capacity_reserved
 
-    @api.depends("min_buffer", "hours_day_3")
+    @api.depends("min_buffer", "hours_day_3", "reserved_mto_3")
     def _get_load_front_3(self):
         self.load_front_3 = 0
-        if self.min_buffer * self.hours_day_3 > 0:
+        capacity_reserved = self.min_buffer * \
+            self.hours_day_3 * self.reserved_mto_3 / 100
+        if capacity_reserved > 0:
             w_orders = self.env["otif100.work_order"].search_read(
-                [('company_id', '=', self.env.user.parent_id.name)],
+                [('company_id', '=', self.env.user.parent_id.name),
+                 ('order_type', '=', 'MTO')],
                 ['hours_ccr_3'])
             hrs_wos = [i['hours_ccr_3'] for i in w_orders]
             hours_ccr = 0
             for hr_wo in hrs_wos:
                 hours_ccr = hours_ccr + hr_wo
-            self.load_front_3 = 100 * hours_ccr / \
-                (self.min_buffer * self.hours_day_3)
+            self.load_front_3 = 100 * hours_ccr / capacity_reserved
+
+    @api.depends("min_buffer", "hours_day_1", "reserved_mto_1")
+    def _get_load_mta_1(self):
+        self.load_mta_1 = 0
+        capacity_reserved = self.min_buffer * \
+            self.hours_day_1 * (1 - self.reserved_mto_1 / 100)
+        if capacity_reserved > 0:
+            w_orders = self.env["otif100.work_order"].search_read(
+                [('company_id', '=', self.env.user.parent_id.name),
+                 ('order_type', '=', 'MTA')],
+                ['total_hours_ccr_1'])
+            hrs_wos = [i['total_hours_ccr_1'] for i in w_orders]
+            hours_ccr = 0
+            for hr_wo in hrs_wos:
+                hours_ccr = hours_ccr + hr_wo
+            self.load_mta_1 = 100 * hours_ccr / capacity_reserved
+
+    @api.depends("min_buffer", "hours_day_2", "reserved_mto_2")
+    def _get_load_mta_2(self):
+        self.load_mta_2 = 0
+        capacity_reserved = self.min_buffer * \
+            self.hours_day_2 * (1 - self.reserved_mto_2 / 100)
+        if capacity_reserved > 0:
+            w_orders = self.env["otif100.work_order"].search_read(
+                [('company_id', '=', self.env.user.parent_id.name),
+                 ('order_type', '=', 'MTA')],
+                ['total_hours_ccr_2'])
+            hrs_wos = [i['total_hours_ccr_2'] for i in w_orders]
+            hours_ccr = 0
+            for hr_wo in hrs_wos:
+                hours_ccr = hours_ccr + hr_wo
+            self.load_mta_2 = 100 * hours_ccr / capacity_reserved
+
+    @api.depends("min_buffer", "hours_day_3", "reserved_mto_3")
+    def _get_load_mta_3(self):
+        self.load_mta_3 = 0
+        capacity_reserved = self.min_buffer * \
+            self.hours_day_3 * (1 - self.reserved_mto_3 / 100)
+        if capacity_reserved > 0:
+            w_orders = self.env["otif100.work_order"].search_read(
+                [('company_id', '=', self.env.user.parent_id.name),
+                 ('order_type', '=', 'MTA')],
+                ['total_hours_ccr_3'])
+            hrs_wos = [i['total_hours_ccr_3'] for i in w_orders]
+            hours_ccr = 0
+            for hr_wo in hrs_wos:
+                hours_ccr = hours_ccr + hr_wo
+            self.load_mta_3 = 100 * hours_ccr / capacity_reserved
 
     @api.depends("standard_dt")
     def _get_standard_pd(self):
@@ -175,62 +256,73 @@ class Plant(models.Model):
                 delivery_time = delivery_time - 1
         self.standard_pd = s_dd_prom
 
-    @api.depends("hours_day_1")
+    @api.depends("hours_day_1", "reserved_mto_1")
     def _get_total_days_1(self):
         self.total_days_1 = 0
-        if self.hours_day_1 > 0:
+        hours_per_day = self.hours_day_1 * self.reserved_mto_1 / 100
+        if hours_per_day > 0:
             w_orders = self.env["otif100.work_order"].search_read(
-                [('company_id', '=', self.env.user.parent_id.name)],
+                [('company_id', '=', self.env.user.parent_id.name),
+                 ('order_type', '=', 'MTO')],
                 ['total_hours_ccr_1'])
             total_hrs_wos = [i['total_hours_ccr_1'] for i in w_orders]
             total_hours_ccr = 0
             for tot_hrs in total_hrs_wos:
                 total_hours_ccr = total_hours_ccr + tot_hrs
-            self.total_days_1 = total_hours_ccr / self.hours_day_1
+            self.total_days_1 = total_hours_ccr / hours_per_day
 
-    @api.depends("hours_day_2")
+    @api.depends("hours_day_2", "reserved_mto_2")
     def _get_total_days_2(self):
         self.total_days_2 = 0
-        if self.hours_day_2 > 0:
+        hours_per_day = self.hours_day_2 * self.reserved_mto_2 / 100
+        if hours_per_day > 0:
             w_orders = self.env["otif100.work_order"].search_read(
-                [('company_id', '=', self.env.user.parent_id.name)],
+                [('company_id', '=', self.env.user.parent_id.name),
+                 ('order_type', '=', 'MTO')],
                 ['total_hours_ccr_2'])
             total_hrs_wos = [i['total_hours_ccr_2'] for i in w_orders]
             total_hours_ccr = 0
             for tot_hrs in total_hrs_wos:
                 total_hours_ccr = total_hours_ccr + tot_hrs
-            self.total_days_2 = total_hours_ccr / self.hours_day_2
+            self.total_days_2 = total_hours_ccr / hours_per_day
 
-    @api.depends("hours_day_3")
+    @api.depends("hours_day_3", "reserved_mto_3")
     def _get_total_days_3(self):
         self.total_days_3 = 0
-        if self.hours_day_3 > 0:
+        hours_per_day = self.hours_day_3 * self.reserved_mto_3 / 100
+        if hours_per_day > 0:
             w_orders = self.env["otif100.work_order"].search_read(
-                [('company_id', '=', self.env.user.parent_id.name)],
+                [('company_id', '=', self.env.user.parent_id.name),
+                 ('order_type', '=', 'MTO')],
                 ['total_hours_ccr_3'])
             total_hrs_wos = [i['total_hours_ccr_3'] for i in w_orders]
             total_hours_ccr = 0
             for tot_hrs in total_hrs_wos:
                 total_hours_ccr = total_hours_ccr + tot_hrs
-            self.total_days_3 = total_hours_ccr / self.hours_day_3
+            self.total_days_3 = total_hours_ccr / hours_per_day
 
-    @api.depends("hours_day_1", "hours_day_2", "hours_day_3")
+    @api.depends("hours_day_1", "hours_day_2", "hours_day_3",
+                 "reserved_mto_1", "reserved_mto_2", "reserved_mto_3")
     def _get_earliest_date(self):
         today = fields.Date.today()
         self.earliest_date = today
-        company_domain = [('company_id', '=', self.env.user.parent_id.name)]
+        hpd1 = self.hours_day_1 * self.reserved_mto_1 / 100
+        hpd2 = self.hours_day_2 * self.reserved_mto_2 / 100
+        hpd3 = self.hours_day_3 * self.reserved_mto_3 / 100
+        company_domain = [('company_id', '=', self.env.user.parent_id.name),
+                          ('order_type', '=', 'MTO')]
         wo_model = self.env["otif100.work_order"].search(company_domain)
         tot_hrs = [[r.due_date, r.total_hours_ccr_1,
                     r.total_hours_ccr_2, r.total_hours_ccr_3] for r in wo_model]
         tot_hrs = sorted(tot_hrs, key=lambda x: x[0])
         wds1, wds2, wds3 = 0, 0, 0
         for r in tot_hrs:
-            if self.hours_day_1 > 0:
-                wds1 = wds1 + r[1] / self.hours_day_1
-            if self.hours_day_2 > 0:
-                wds2 = wds2 + r[2] / self.hours_day_2
-            if self.hours_day_3 > 0:
-                wds3 = wds3 + r[3] / self.hours_day_3
+            if hpd1 > 0:
+                wds1 = wds1 + r[1] / hpd1
+            if hpd2 > 0:
+                wds2 = wds2 + r[2] / hpd2
+            if hpd3 > 0:
+                wds3 = wds3 + r[3] / hpd3
             r[1], r[2], r[3] = wds1, wds2, wds3
         nw_days = self.env["otif100.nwd"].search_read(
             [('company_id', '=', self.env.user.parent_id.name)], ['nwds'])
@@ -265,7 +357,7 @@ class Plant(models.Model):
                 cur_date = cur_date + timedelta(days=1)
             self.earliest_date = cur_date
 
-    @api.depends("earliest_date", "standard_dt")
+    @api.depends("earliest_date", "standard_pd")
     def _get_suggested_date(self):
         if self.standard_pd > self.earliest_date:
             self.suggested_date = self.standard_pd

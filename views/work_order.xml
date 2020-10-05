@@ -7,11 +7,12 @@
         <sheet>
           <group>
             <group string="Order Data">
-              <field name="wo_id"/>
+              <field name="wo_id" readonly="1"/>
               <field name="sku_id"/>
               <field name="sku_description"/>
+              <field name="order_type"/>
               <field name="cli_id"/>
-              <field name="due_date"/>
+              <field name="due_date" attrs="{'invisible': [('order_type','=','MTA')]}"/>
               <field name="qty_total"/>
             </group>
             <group string="Status">
@@ -19,14 +20,16 @@
               <field name="buffer_status"/>
               <field name="buffer_penetration" widget="progressbar"/>
               <field name="work_center"/>
+              <field name="buffer" attrs="{'invisible': [('order_type','=','MTA')]}"/>
+              <field name="stock_buffer" readonly="1" attrs="{'invisible': [('order_type','=','MTO')]}"/>
+              <field name="onhand" readonly="1" attrs="{'invisible': [('order_type','=','MTO')]}"/>
             </group>
             <group string="Order details">
               <field name="qty_before_1"/>
               <field name="qty_before_2"/>
               <field name="qty_before_3"/>
-              <field name="recommended_release_date"/>
-              <field name="actual_release_date"/>
-              <field name="buffer"/>
+              <field name="recommended_release_date" attrs="{'invisible': [('order_type','=','MTA')]}"/>
+              <field name="actual_release_date" attrs="{'invisible': [('order_type','=','MTA')]}"/>
             </group>
           </group>
         </sheet>
@@ -38,22 +41,23 @@
     <field name="name">work_order.tree</field>
     <field name="model">otif100.work_order</field>
     <field name="arch" type="xml">
-      <tree string="Work Order tree" default_order='due_date'
+      <tree string="Work Order tree" default_order='buffer_status'
             decoration-bf="buffer_status == '0. black'"
             decoration-danger="buffer_status == '1. red'"
             decoration-warning="buffer_status == '2. yellow'"
             decoration-success="buffer_status == '3. green'"
             decoration-info="buffer_status == '4. cyan'">
         <field name="need_action"/>
+        <field name="order_type" invisible="1"/>
         <field name="wo_id"/>
         <field name="cli_id"/>
         <field name="sku_id"/>
         <field name="sku_description"/>
         <field name="work_center"/>
         <field name="qty_total"/>
-        <field name="due_date"/>
-        <field name="recommended_release_date"/>
-        <field name="actual_release_date"/>
+        <field name="due_date" attrs="{'invisible': [('order_type','=','MTA')]}"/>
+        <field name="recommended_release_date" attrs="{'invisible': [('order_type','=','MTA')]}"/>
+        <field name="actual_release_date" attrs="{'invisible': [('order_type','=','MTA')]}"/>
         <field name="buffer_status" invisible="1"/>
         <field name="company_id" invisible="1"/>
       </tree>
@@ -73,10 +77,13 @@
         <filter name="loading_1" string="Loading CCR1" domain="[('qty_before_1', '>', '0')]"/>
         <filter name="loading_2" string="Loading CCR2" domain="[('qty_before_2', '>', '0')]"/>
         <filter name="loading_3" string="Loading CCR3" domain="[('qty_before_3', '>', '0')]"/>
+        <filter name="is_mto" string="MTO orders" domain="[('order_type', '=', 'MTO')]"/>
+        <filter name="is_mta" string="MTA orders" domain="[('order_type', '=', 'MTA')]"/>
         <group string="Group by">
           <filter name="by_customer" string="Customer" context="{'group_by': 'cli_id'}"/>
           <filter name="by_workcenter" string="Work center" context="{'group_by': 'work_center'}"/>
           <filter name="by_color" string="Priority" context="{'group_by': 'buffer_status'}"/>
+          <filter name="by_type" string="Type" context="{'group_by': 'order_type'}"/>
         </group>
       </search>
     </field>
