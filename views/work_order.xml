@@ -89,6 +89,17 @@
     </field>
   </record>
 
+  <record model="ir.ui.view" id="work_order_graph_view">
+    <field name="name">work_order.graph</field>
+    <field name="model">otif100.work_order</field>
+    <field name="type">graph</field>
+    <field name="arch" type="xml">
+     <graph string="Color profile" orientation="horizontal" type="pie">
+       <field name="buffer_status"/>
+      </graph>
+    </field>
+  </record>
+
   <record model="ir.actions.server" id="ir_massive_release_action">
     <field name="name">Release marked</field>
     <field name="model_id" ref="model_otif100_work_order"/>
@@ -115,7 +126,7 @@
     <field name="res_model">otif100.work_order</field>
     <field name="limit">1000</field>
     <field name="view_type">form</field>
-    <field name="view_mode">tree,form</field>
+    <field name="view_mode">tree,graph,form</field>
   </record>
 
   <menuitem id="work_order_menu" name="Work Orders" parent="production_menu" action="work_order_list_action"/>
