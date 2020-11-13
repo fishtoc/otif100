@@ -20,6 +20,7 @@
         'views/nonworkingdays.xml',
         'views/plant.xml',
         'views/help.xml',
+        'data/actionscheduler.xml',
     ],
     'application': True,
 }
