@@ -116,7 +116,7 @@ class Work_order(models.Model):
     buffer_penetration = fields.Float(
         compute="_get_buffer_penetration",
         default=0,
-        store=True,
+        store=False,
     )
     buffer_status = fields.Char(
         compute="_get_buffer_status",
@@ -312,10 +312,7 @@ class Work_order(models.Model):
 
     @api.model
     def recalculate_colors(self):
-        model = self.env['otif100.work_order']
-        self.env.add_todo(model._fields['buffer_penetration'],
-                          model.search([('order_type', '=', 'MTO')]))
-        model.recompute()
+        model = self.env['otif100.work_order'].sudo()
         self.env.add_todo(model._fields['buffer_status'],
                           model.search([('order_type', '=', 'MTO')]))
         model.recompute()
