@@ -28,7 +28,7 @@
                 />
     <menuitem id="menu_color_update"
               action="act_confirmwizard"
-              parent="configuration_menu"
+              parent="load_control_menu"
               sequence="1000"
               name="Buffer status update"/>
   </data>
