@@ -1,0 +1,35 @@
+<odoo>
+  <data>
+    <!-- form wizard -->
+    <record model="ir.ui.view" id="wizard_color_update_form_view">
+      <field name="name">color_update.form</field>
+      <field name="model">otif100.color_update</field>
+      <field name="arch" type="xml">
+        <form string="Buffer status update form">
+          <h1>This process may take some time, depending on the volume.</h1>
+          <h1>Are you sure?</h1>
+          <h3>Remember to refresh screen when the process is finished.</h3>
+          <footer>
+            <button string="Confirm" type="object" name="confirm_button" class="oe_highlight"/>
+            <button string="Cancel" special="cancel"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+    <!-- menu for wizard -->
+    <act_window id="act_confirmwizard"
+                name="Buffer status update"
+                res_model="otif100.color_update"
+                src_model="otif100.work_order"
+                view_type="form"
+                view_mode="form"
+                target="new"
+                key2="client_action_multi"
+                />
+    <menuitem id="menu_color_update"
+              action="act_confirmwizard"
+              parent="configuration_menu"
+              sequence="1000"
+              name="Buffer status update"/>
+  </data>
+</odoo>

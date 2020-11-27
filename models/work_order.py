@@ -312,7 +312,7 @@ class Work_order(models.Model):
 
     @api.model
     def recalculate_colors(self):
-        model = self.env['otif100.work_order'].sudo()
+        model = self.env['otif100.work_order']
         self.env.add_todo(model._fields['buffer_status'],
                           model.search([('order_type', '=', 'MTO')]))
         model.recompute()

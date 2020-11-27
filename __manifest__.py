@@ -21,6 +21,7 @@
         'views/plant.xml',
         'views/help.xml',
         'data/actionscheduler.xml',
+        'wizard/color_update.xml',
     ],
     'application': True,
 }
