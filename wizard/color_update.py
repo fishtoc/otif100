@@ -10,4 +10,7 @@ class ColorUpdate(models.TransientModel):
         self.ensure_one()
         wo = self.env['otif100.work_order']
         wo.recalculate_colors()
-        return {'type': 'ir.actions.act_window_close'}
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }

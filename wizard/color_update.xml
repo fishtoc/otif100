@@ -8,7 +8,6 @@
         <form string="Buffer status update form">
           <h1>This process may take some time, depending on the volume.</h1>
           <h1>Are you sure?</h1>
-          <h3>Remember to refresh screen when the process is finished.</h3>
           <footer>
             <button string="Confirm" type="object" name="confirm_button" class="oe_highlight"/>
             <button string="Cancel" special="cancel"/>
