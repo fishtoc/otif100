@@ -307,6 +307,7 @@ class Plant(models.Model):
     def _get_earliest_date(self):
         today = fields.Date.today()
         self.earliest_date = today
+        half_pb = int(self.min_buffer / 2)
         hpd1 = self.hours_day_1 * self.reserved_mto_1 / 100
         hpd2 = self.hours_day_2 * self.reserved_mto_2 / 100
         hpd3 = self.hours_day_3 * self.reserved_mto_3 / 100
@@ -351,7 +352,7 @@ class Plant(models.Model):
         if pos_date >= 0 and tot_av_wds[pos_date][0] > today:
             # 1/2 target WIP más de seguridad - parecido a FL+PB/2
             ext_wds = max_wds - \
-                tot_av_wds[pos_date][1] + int(self.min_buffer / 2)
+                tot_av_wds[pos_date][1] + half_pb
             cur_date = tot_av_wds[pos_date][0]
             while ext_wds >= 0:
                 if cur_date not in nw_dates:
