@@ -316,4 +316,7 @@ class Work_order(models.Model):
         self.env.add_todo(model._fields['buffer_status'],
                           model.search([('order_type', '=', 'MTO')]))
         model.recompute()
+        self.env.add_todo(model._fields['need_action'],
+                          model.search([('order_type', '=', 'MTO')]))
+        model.recompute()
         self.env.cr.commit()

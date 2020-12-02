@@ -302,7 +302,8 @@ class Plant(models.Model):
             self.total_days_3 = total_hours_ccr / hours_per_day
 
     @api.depends("hours_day_1", "hours_day_2", "hours_day_3",
-                 "reserved_mto_1", "reserved_mto_2", "reserved_mto_3")
+                 "reserved_mto_1", "reserved_mto_2", "reserved_mto_3",
+                 "min_buffer")
     def _get_earliest_date(self):
         today = fields.Date.today()
         self.earliest_date = today
@@ -349,7 +350,7 @@ class Plant(models.Model):
             pos_date = pos_date - 1
         if pos_date >= 0 and tot_av_wds[pos_date][0] > today:
             # 2 días más de seguridad
-            ext_wds = max_wds - tot_av_wds[pos_date][1] + 2
+            ext_wds = max_wds - tot_av_wds[pos_date][1] + r.min_buffer
             cur_date = tot_av_wds[pos_date][0]
             while ext_wds >= 0:
                 if cur_date not in nw_dates:
