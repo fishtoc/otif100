@@ -4,7 +4,7 @@
     'author': 'Matias Birrell R.',
     'website': 'https://www.goldfishltd.cl',
     'category': 'PRO',
-    'version': '1.2.0',
+    'version': '2.0.0',
     'depends': [
         'base',
         'mail',
