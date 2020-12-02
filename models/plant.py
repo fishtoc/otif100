@@ -349,8 +349,9 @@ class Plant(models.Model):
                 break
             pos_date = pos_date - 1
         if pos_date >= 0 and tot_av_wds[pos_date][0] > today:
-            # 2 días más de seguridad
-            ext_wds = max_wds - tot_av_wds[pos_date][1] + r.min_buffer
+            # 1/2 target WIP más de seguridad - parecido a FL+PB/2
+            ext_wds = max_wds - \
+                tot_av_wds[pos_date][1] + int(self.min_buffer / 2)
             cur_date = tot_av_wds[pos_date][0]
             while ext_wds >= 0:
                 if cur_date not in nw_dates:
