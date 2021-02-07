@@ -11,7 +11,7 @@
               <field name="sku_id"/>
               <field name="sku_description"/>
               <field name="order_type"/>
-              <field name="cli_id"/>
+              <field name="cli_id" groups="otif100.group_manager"/>
               <field name="due_date" attrs="{'invisible': [('order_type','=','MTA')]}"/>
               <field name="qty_total"/>
             </group>
@@ -50,7 +50,7 @@
         <field name="need_action"/>
         <field name="order_type" invisible="1"/>
         <field name="wo_id"/>
-        <field name="cli_id"/>
+        <field name="cli_id" groups="otif100.group_manager"/>
         <field name="sku_id"/>
         <field name="sku_description"/>
         <field name="work_center"/>
