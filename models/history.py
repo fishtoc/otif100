@@ -39,15 +39,11 @@ class History(models.Model):
     company_id = fields.Char(  # Para filtrar por company
     )
     buffer_status = fields.Char(
-        compute="_get_buffer_status",
         string="Buffer color",
-        store=True,
     )
     order_type = fields.Char(
-        compute="_get_type",
         string="Type",
         help="MTO: Make to Order - MTA: Make to Availability",
-        store=True,
     )
     ontime = fields.Float(
         string="OTIF",
