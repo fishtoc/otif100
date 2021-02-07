@@ -120,11 +120,20 @@
     <field name="code">model.mass_freeze()</field>
   </record>
 
+  <record model="ir.actions.server" id="ir_massive_finish_action">
+    <field name="name">Finish marked</field>
+    <field name="model_id" ref="model_otif100_work_order"/>
+    <field name="binding_model_id" ref="model_otif100_work_order"/>
+    <field name="key2">client_action_multi</field>
+    <field name="key">action</field>
+    <field name="state">code</field>
+    <field name="code">model.mass_finish_order()</field>
+  </record>
 
   <record model="ir.actions.act_window" id="work_order_list_action">
     <field name="name">Work Orders</field>
     <field name="res_model">otif100.work_order</field>
-    <field name="limit">1000</field>
+    <field name="limit">100</field>
     <field name="view_type">form</field>
     <field name="view_mode">tree,graph,form</field>
   </record>

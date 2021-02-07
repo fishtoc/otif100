@@ -7,9 +7,11 @@ family_manager,family manager,model_otif100_family,group_manager,1,1,1,1
 family_user,family user,model_otif100_family,group_user,1,0,0,0
 nwd_manager,nwd manager,model_otif100_nwd,group_manager,1,1,1,1
 plant_manager,plant manager,model_otif100_plant,group_manager,1,1,1,1
+history_manager,history manager,model_otif100_history,group_manager,1,1,1,0
 nwd_user,nwd user,model_otif100_nwd,group_user,1,0,0,0
 work_order_superuser,work_order superuser,model_otif100_work_order,group_superuser,1,1,1,1
 sku_superuser,sku superuser,model_otif100_sku,group_superuser,1,1,1,1
 family_superuser,family superuser,model_otif100_family,group_superuser,1,1,1,1
 nwd_superuser,nwd superuser,model_otif100_nwd,group_superuser,1,1,1,1
 plant_superuser,plant superuser,model_otif100_plant,group_superuser,1,1,1,1
+history_superuser,history superuser,model_otif100_history,group_superuser,1,1,1,1

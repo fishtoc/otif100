@@ -20,6 +20,7 @@
         'views/nonworkingdays.xml',
         'views/plant.xml',
         'views/help.xml',
+        'views/history.xml',
         'data/actionscheduler.xml',
         'wizard/color_update.xml',
     ],
