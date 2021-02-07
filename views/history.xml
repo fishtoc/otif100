@@ -28,7 +28,7 @@
     <field name="name">history.tree</field>
     <field name="model">otif100.history</field>
     <field name="arch" type="xml">
-      <tree string="History tree" default_order='buffer_status'
+      <tree string="History tree" default_order='finish_date'
             decoration-bf="buffer_status == '0. black'"
             decoration-danger="buffer_status == '1. red'"
             decoration-warning="buffer_status == '2. yellow'"
