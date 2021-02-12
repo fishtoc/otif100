@@ -3,3 +3,4 @@ from . import family
 from . import sku
 from . import nonworkingdays
 from . import plant
+from . import history

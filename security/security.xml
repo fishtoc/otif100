@@ -137,6 +137,16 @@
     </field>
   </record>
 
+    <record id="history_company_filter_mgr" model="ir.rule">
+    <field name="name">History only for same company</field>
+    <field name="model_id" ref="model_otif100_history"/>
+    <field name="groups" eval="[(4,ref('otif100.group_manager'))]"/>
+    <field name="domain_force">
+      ['|', ('company_id','=',False),
+            ('company_id','=',user.parent_id.name)]
+    </field>
+  </record>
+
   <record id="plant_company_filter_su" model="ir.rule">
     <field name="name">Plants all companies</field>
     <field name="model_id" ref="model_otif100_plant"/>
@@ -146,4 +156,12 @@
     </field>
   </record>
 
+  <record id="history_company_filter_su" model="ir.rule">
+    <field name="name">History all companies</field>
+    <field name="model_id" ref="model_otif100_history"/>
+    <field name="groups" eval="[(4,ref('otif100.group_superuser'))]"/>
+    <field name="domain_force">
+      [('company_id','!=',False)]
+    </field>
+  </record>
 </odoo>

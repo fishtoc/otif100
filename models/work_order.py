@@ -312,6 +312,43 @@ class Work_order(models.Model):
             worec.write({'actual_release_date': None, })
         return {}
 
+    @api.multi
+    def mass_finish_order(self):
+        worecs = self.env['otif100.work_order'].browse(
+            self._context.get('active_ids'))
+        oldwos = self.env['otif100.history']
+        for worec in worecs:
+            # Construimos el registro nuevo
+            ontime = 0
+            if worec.order_type == 'MTO' and worec.due_date > fields.Date.today():
+                ontime = 100
+            elif worec.order_type == 'MTA' and worec.buffer_status != "0. black":
+                ontime = 100
+            upd_rec = {
+                'wo_id': worec.wo_id, 
+                'cli_id': worec.cli_id, 
+                'sku_id': worec.sku_id.name,
+                'sku_description': worec.sku_description, 
+                'qty_total': worec.qty_total,
+                'due_date': worec.due_date, 
+                'actual_release_date': worec.actual_release_date,
+                'company_id': worec.company_id, 
+                'buffer_status': worec.buffer_status,
+                'order_type': worec.order_type, 
+                'ontime': ontime,
+                'finish_date': fields.Date.today(),
+            }
+            # Revisa si existe en la historia
+            saved_wos = oldwos.search([('wo_id','=',worec.wo_id)])
+            # Si existe, actualiza; sino, lo crea
+            if saved_wos:
+                for saved_wo in saved_wos:
+                    saved_wo.write(upd_rec)
+            else:
+                oldwos.create(upd_rec)
+            worec.unlink()
+        return {}
+
     @api.model
     def recalculate_colors(self):
         model = self.env['otif100.work_order']
