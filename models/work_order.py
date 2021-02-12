@@ -204,7 +204,7 @@ class Work_order(models.Model):
                         cur_date = cur_date + timedelta(days=lapso)
                     r.buffer_penetration = 100 * Buffer_comsumption / r.buffer
 
-    @api.depends("buffer_penetration", "is_released")
+    @api.depends("buffer_penetration", "is_released", "due_date", "today")
     def _get_buffer_status(self):
         for r in self:
             if r.buffer_penetration < 0:
@@ -219,6 +219,8 @@ class Work_order(models.Model):
             elif r.buffer_penetration < 100.01:
                 r.buffer_status = '1. red'
             else:
+                r.buffer_status = '0. black'
+            if r.due_date < r.today:
                 r.buffer_status = '0. black'
 
     @api.depends("actual_release_date")
