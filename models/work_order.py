@@ -156,13 +156,14 @@ class Work_order(models.Model):
             [('company_id', '=', self.env.user.parent_id.name)], ['nwds'])
         nw_dates = [i['nwds'] for i in nw_days]
         for r in self:
-            buff = r.buffer
-            recc_rd = r.due_date
-            while buff > 0:
-                recc_rd = recc_rd - timedelta(days=1)
-                if recc_rd not in nw_dates:
-                    buff = buff - 1
-            r.recommended_release_date = recc_rd
+            if r.order_type == "MTO":
+                buff = r.buffer
+                recc_rd = r.due_date
+                while buff > 0:
+                    recc_rd = recc_rd - timedelta(days=1)
+                    if recc_rd not in nw_dates:
+                        buff = buff - 1
+                r.recommended_release_date = recc_rd
 
     @api.depends("recommended_release_date", "today")
     def _should_release(self):
