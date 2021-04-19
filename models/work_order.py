@@ -28,45 +28,6 @@ class Work_order(models.Model):
         string="Total qty",
         default=0.0,
     )
-    qty_before_1 = fields.Float(  # Qty not processed by CCRi
-        string="Qty before CCR 1",
-        default=0.0,
-    )
-    parts_per_hour_1 = fields.Float(
-        related="sku_id.parts_per_hour_1",
-    )
-    hours_ccr_1 = fields.Float(
-        compute="_get_hours_ccr_1",
-    )
-    total_hours_ccr_1 = fields.Float(
-        compute="_get_total_hours_ccr_1",
-    )
-    qty_before_2 = fields.Float(
-        string="Qty before CCR 2",
-        default=0.0,
-    )
-    parts_per_hour_2 = fields.Float(
-        related="sku_id.parts_per_hour_2",
-    )
-    hours_ccr_2 = fields.Float(
-        compute="_get_hours_ccr_2",
-    )
-    total_hours_ccr_2 = fields.Float(
-        compute="_get_total_hours_ccr_2",
-    )
-    qty_before_3 = fields.Float(
-        string="Qty before CCR 3",
-        default=0.0,
-    )
-    parts_per_hour_3 = fields.Float(
-        related="sku_id.parts_per_hour_3",
-    )
-    hours_ccr_3 = fields.Float(
-        compute="_get_hours_ccr_3",
-    )
-    total_hours_ccr_3 = fields.Float(
-        compute="_get_total_hours_ccr_3",
-    )
     work_center = fields.Char(
         string="Work center",
         default="",
@@ -149,6 +110,90 @@ class Work_order(models.Model):
         compute="_get_today_date",
         store=False,
     )
+    ############### DATOS para control de carga en 6 CCRs - ver SKU.py ara PPH
+    # Cantidades antes de los CCR
+    qty_before_1 = fields.Float(
+        string="Qty before CCR 1",
+        default=0.0,
+    )
+    qty_before_2 = fields.Float(
+        string="Qty before CCR 2",
+        default=0.0,
+    )
+    qty_before_3 = fields.Float(
+        string="Qty before CCR 3",
+        default=0.0,
+    )
+    qty_before_4 = fields.Float(
+        string="Qty before CCR 4",
+        default=0.0,
+    )
+    qty_before_5 = fields.Float(
+        string="Qty before CCR 5",
+        default=0.0,
+    )
+    qty_before_6 = fields.Float(
+        string="Qty before CCR 6",
+        default=0.0,
+    )
+    # PPH
+    parts_per_hour_1 = fields.Float(
+        related="sku_id.parts_per_hour_1",
+    )
+    parts_per_hour_2 = fields.Float(
+        related="sku_id.parts_per_hour_2",
+    )
+    parts_per_hour_3 = fields.Float(
+        related="sku_id.parts_per_hour_3",
+    )
+    parts_per_hour_4 = fields.Float(
+        related="sku_id.parts_per_hour_4",
+    )
+    parts_per_hour_5 = fields.Float(
+        related="sku_id.parts_per_hour_5",
+    )
+    parts_per_hour_6 = fields.Float(
+        related="sku_id.parts_per_hour_6",
+    )
+    # Horas liberadas en CCRs
+    hours_ccr_1 = fields.Float(
+        compute="_get_hours_ccr_1",
+    )
+    hours_ccr_2 = fields.Float(
+        compute="_get_hours_ccr_2",
+    )
+    hours_ccr_3 = fields.Float(
+        compute="_get_hours_ccr_3",
+    )    
+    hours_ccr_4 = fields.Float(
+        compute="_get_hours_ccr_4",
+    )    
+    hours_ccr_5 = fields.Float(
+        compute="_get_hours_ccr_5",
+    )    
+    hours_ccr_6 = fields.Float(
+        compute="_get_hours_ccr_6",
+    )    
+    # Horas comprometidas en CCR
+    total_hours_ccr_1 = fields.Float(
+        compute="_get_total_hours_ccr_1",
+    )
+    total_hours_ccr_2 = fields.Float(
+        compute="_get_total_hours_ccr_2",
+    )
+    total_hours_ccr_3 = fields.Float(
+        compute="_get_total_hours_ccr_3",
+    )
+    total_hours_ccr_4 = fields.Float(
+        compute="_get_total_hours_ccr_4",
+    )
+    total_hours_ccr_5 = fields.Float(
+        compute="_get_total_hours_ccr_5",
+    )
+    total_hours_ccr_6 = fields.Float(
+        compute="_get_total_hours_ccr_6",
+    )
+
 
     @api.depends("due_date", "buffer")
     def _get_recommended_release_date(self):
@@ -205,7 +250,7 @@ class Work_order(models.Model):
                         cur_date = cur_date + timedelta(days=lapso)
                     r.buffer_penetration = 100 * Buffer_comsumption / r.buffer
 
-    @api.depends("buffer_penetration", "is_released", "due_date", "today", "order_type", "onhand")
+    @api.depends("buffer_penetration", "is_released", "due_date", "today", "order_type")
     def _get_buffer_status(self):
         for r in self:
             if r.buffer_penetration < 0:
@@ -223,7 +268,7 @@ class Work_order(models.Model):
                 r.buffer_status = '0. black'
             if r.order_type == "MTO" and r.due_date < r.today:
                 r.buffer_status = '0. black'
-            if r.order_type == "MTA" and r.onhand <= 0:
+            if r.order_type == "MTA" and r.buffer_penetration >= 100:
                 r.buffer_status = '0. black'    
 
     @api.depends("actual_release_date")
@@ -277,26 +322,82 @@ class Work_order(models.Model):
             if r.is_released:
                 r.hours_ccr_3 = r.total_hours_ccr_3
 
-    @api.depends("qty_before_1")
+    @api.depends("is_released", "total_hours_ccr_4")
+    def _get_hours_ccr_4(self):
+        for r in self:
+            r.hours_ccr_4 = 0
+            if r.is_released:
+                r.hours_ccr_4 = r.total_hours_ccr_4
+
+    @api.depends("is_released", "total_hours_ccr_5")
+    def _get_hours_ccr_5(self):
+        for r in self:
+            r.hours_ccr_5 = 0
+            if r.is_released:
+                r.hours_ccr_5 = r.total_hours_ccr_5
+
+    @api.depends("is_released", "total_hours_ccr_6")
+    def _get_hours_ccr_6(self):
+        for r in self:
+            r.hours_ccr_6 = 0
+            if r.is_released:
+                r.hours_ccr_6 = r.total_hours_ccr_6
+
+    # Calcula total de horas de la orden en CCR genérico
+    def get_total_hours_ccr_x(self, qty_bf, pph):
+        for r in self:
+            total_hours_ccr = 0
+            if pph > 0:
+                total_hours_ccr = qty_bf / pph
+            return total_hours_ccr
+
+    @api.depends("qty_before_1", "parts_per_hour_1")
     def _get_total_hours_ccr_1(self):
         for r in self:
-            r.total_hours_ccr_1 = 0
-            if r.parts_per_hour_1 > 0:
-                r.total_hours_ccr_1 = r.qty_before_1 / r.parts_per_hour_1
+            r.total_hours_ccr_1 = self.get_total_hours_ccr_x(
+                r.qty_before_1,
+                r.parts_per_hour_1
+            )
 
-    @api.depends("qty_before_2")
+    @api.depends("qty_before_2", "parts_per_hour_2")
     def _get_total_hours_ccr_2(self):
         for r in self:
-            r.total_hours_ccr_2 = 0
-            if r.parts_per_hour_2 > 0:
-                r.total_hours_ccr_2 = r.qty_before_2 / r.parts_per_hour_2
+            r.total_hours_ccr_2 = self.get_total_hours_ccr_x(
+                r.qty_before_2,
+                r.parts_per_hour_2
+            )
 
-    @api.depends("qty_before_3")
+    @api.depends("qty_before_3", "parts_per_hour_3")
     def _get_total_hours_ccr_3(self):
         for r in self:
-            r.total_hours_ccr_3 = 0
-            if r.parts_per_hour_3 > 0:
-                r.total_hours_ccr_3 = r.qty_before_3 / r.parts_per_hour_3
+            r.total_hours_ccr_3 = self.get_total_hours_ccr_x(
+                r.qty_before_3,
+                r.parts_per_hour_3
+            )
+
+    @api.depends("qty_before_4", "parts_per_hour_4")
+    def _get_total_hours_ccr_4(self):
+        for r in self:
+            r.total_hours_ccr_4 = self.get_total_hours_ccr_x(
+                r.qty_before_4,
+                r.parts_per_hour_4
+            )
+
+    @api.depends("qty_before_5", "parts_per_hour_5")
+    def _get_total_hours_ccr_5(self):
+        for r in self:
+            r.total_hours_ccr_5 = self.get_total_hours_ccr_x(
+                r.qty_before_5,
+                r.parts_per_hour_5
+            )
+
+    @api.depends("qty_before_6", "parts_per_hour_6")
+    def _get_total_hours_ccr_6(self):
+        for r in self:
+            r.total_hours_ccr_6 = self.get_total_hours_ccr_x(
+                r.qty_before_6,
+                r.parts_per_hour_6
+            )
 
     @api.multi
     def mass_release(self):

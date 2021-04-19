@@ -24,12 +24,19 @@
               <field name="stock_buffer" readonly="1" attrs="{'invisible': [('order_type','=','MTO')]}"/>
               <field name="onhand" readonly="1" attrs="{'invisible': [('order_type','=','MTO')]}"/>
             </group>
-            <group string="Order details">
-              <field name="qty_before_1"/>
-              <field name="qty_before_2"/>
-              <field name="qty_before_3"/>
-              <field name="recommended_release_date" attrs="{'invisible': [('order_type','=','MTA')]}"/>
-              <field name="actual_release_date" attrs="{'invisible': [('order_type','=','MTA')]}"/>
+            <group string="Order details" col="4">
+              <group>
+                <field name="recommended_release_date" attrs="{'invisible': [('order_type','=','MTA')]}"/>
+                <field name="actual_release_date" attrs="{'invisible': [('order_type','=','MTA')]}"/>
+                <field name="qty_before_1"/>
+                <field name="qty_before_2"/>
+              </group>
+              <group>
+                <field name="qty_before_3"/>
+                <field name="qty_before_4"/>
+                <field name="qty_before_5"/>
+                <field name="qty_before_6"/>
+              </group>
             </group>
           </group>
         </sheet>
@@ -77,6 +84,9 @@
         <filter name="loading_1" string="Loading CCR1" domain="[('qty_before_1', '>', '0')]"/>
         <filter name="loading_2" string="Loading CCR2" domain="[('qty_before_2', '>', '0')]"/>
         <filter name="loading_3" string="Loading CCR3" domain="[('qty_before_3', '>', '0')]"/>
+        <filter name="loading_4" string="Loading CCR4" domain="[('qty_before_4', '>', '0')]"/>
+        <filter name="loading_5" string="Loading CCR5" domain="[('qty_before_5', '>', '0')]"/>
+        <filter name="loading_6" string="Loading CCR6" domain="[('qty_before_6', '>', '0')]"/>
         <filter name="is_mto" string="MTO orders" domain="[('order_type', '=', 'MTO')]"/>
         <filter name="is_mta" string="MTA orders" domain="[('order_type', '=', 'MTA')]"/>
         <group string="Group by">
@@ -94,8 +104,8 @@
     <field name="model">otif100.work_order</field>
     <field name="type">graph</field>
     <field name="arch" type="xml">
-     <graph string="Color profile" orientation="horizontal" type="pie">
-       <field name="buffer_status"/>
+      <graph string="Color profile" orientation="horizontal" type="pie">
+        <field name="buffer_status"/>
       </graph>
     </field>
   </record>

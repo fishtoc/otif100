@@ -11,6 +11,9 @@
             <field name="parts_per_hour_1"/>
             <field name="parts_per_hour_2"/>
             <field name="parts_per_hour_3"/>
+            <field name="parts_per_hour_4"/>
+            <field name="parts_per_hour_5"/>
+            <field name="parts_per_hour_6"/>
           </group>
         </sheet>
       </form>
@@ -27,6 +30,9 @@
         <field name="parts_per_hour_1"/>
         <field name="parts_per_hour_2"/>
         <field name="parts_per_hour_3"/>
+        <field name="parts_per_hour_4"/>
+        <field name="parts_per_hour_5"/>
+        <field name="parts_per_hour_6"/>
         <field name="company_id" invisible="1"/>
       </tree>
     </field>

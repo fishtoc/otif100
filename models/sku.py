@@ -42,6 +42,18 @@ class Sku(models.Model):
         string="Parts per hour CCR 3",
         default=0,
     )
+    parts_per_hour_4 = fields.Float(
+        string="Parts per hour CCR 4",
+        default=0,
+    )
+    parts_per_hour_5 = fields.Float(
+        string="Parts per hour CCR 5",
+        default=0,
+    )
+    parts_per_hour_6 = fields.Float(
+        string="Parts per hour CCR 6",
+        default=0,
+    )
     _sql_constraints = [
         ("name_unique",
          "UNIQUE(name,company_id)",
