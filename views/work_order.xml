@@ -24,7 +24,7 @@
               <field name="stock_buffer" readonly="1" attrs="{'invisible': [('order_type','=','MTO')]}"/>
               <field name="onhand" readonly="1" attrs="{'invisible': [('order_type','=','MTO')]}"/>
             </group>
-            <group string="Order details" col="4">
+            <group string="Order details" col="2">
               <group>
                 <field name="recommended_release_date" attrs="{'invisible': [('order_type','=','MTA')]}"/>
                 <field name="actual_release_date" attrs="{'invisible': [('order_type','=','MTA')]}"/>
